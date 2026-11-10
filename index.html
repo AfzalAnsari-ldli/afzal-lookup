@@ -521,9 +521,15 @@
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     z-index: 9999;
-    display: flex; align-items: center; justify-content: center;
+    display: none; align-items: center; justify-content: center;
     padding: 20px;
     animation: fadeIn .35s ease;
+  }
+  .key-modal-overlay.active {
+    display: flex !important;
+  }
+  .key-modal-overlay[hidden] {
+    display: none !important;
   }
   .key-modal-card {
     background: rgba(15, 23, 42, 0.95);
@@ -703,7 +709,7 @@
 </footer>
 
 <!-- ════════ Key Access Modal ════════ -->
-<div id="key-modal-overlay" class="key-modal-overlay" hidden>
+<div id="key-modal-overlay" class="key-modal-overlay" style="display:none;" hidden>
   <div class="key-modal-card">
     <span class="key-modal-icon">&#128272;</span>
     <h2 class="key-modal-title">Access Key Required</h2>
@@ -749,7 +755,7 @@
 </div>
 
 <!-- ════════ Blocked Modal ════════ -->
-<div id="blocked-modal-overlay" class="key-modal-overlay" hidden>
+<div id="blocked-modal-overlay" class="key-modal-overlay" style="display:none;" hidden>
   <div class="key-modal-card" style="border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 60px rgba(239, 68, 68, 0.25);">
     <span style="font-size:3.5rem; display:block; margin-bottom:12px;">&#128683;</span>
     <h2 style="color:var(--danger); font-size:1.6rem; font-weight:800; margin-bottom:10px;">Device Blocked!</h2>
@@ -880,6 +886,8 @@ function showKeyModal() {
   const modal = document.getElementById('key-modal-overlay');
   const devIdEl = document.getElementById('modal-dev-id-disp');
   if (devIdEl) devIdEl.textContent = getDeviceId();
+  modal.style.display = 'flex';
+  modal.classList.add('active');
   modal.removeAttribute('hidden');
   setTimeout(() => {
     const ki = document.getElementById('key-access-input');
@@ -888,7 +896,10 @@ function showKeyModal() {
 }
 
 function hideKeyModal() {
-  document.getElementById('key-modal-overlay').setAttribute('hidden', '');
+  const modal = document.getElementById('key-modal-overlay');
+  modal.style.display = 'none';
+  modal.classList.remove('active');
+  modal.setAttribute('hidden', '');
 }
 
 function showBlockedModal() {
@@ -896,6 +907,8 @@ function showBlockedModal() {
   const bm = document.getElementById('blocked-modal-overlay');
   const bDev = document.getElementById('blocked-dev-id');
   if (bDev) bDev.textContent = getDeviceId();
+  bm.style.display = 'flex';
+  bm.classList.add('active');
   bm.removeAttribute('hidden');
 }
 
