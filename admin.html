@@ -1,0 +1,1485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>👑 Afzal Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050914;
+      --surface: rgba(15, 23, 42, 0.65);
+      --surface-hover: rgba(30, 41, 59, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(56, 189, 248, 0.5);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --muted-2: #64748b;
+      --primary: #38bdf8;
+      --primary-hover: #7dd3fc;
+      --success: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --purple: #818cf8;
+      --insta-grad: linear-gradient(45deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888);
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+      --sidebar-w: 240px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 15% 50%, rgba(56,189,248,.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(129,140,248,.06), transparent 25%);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ═══════════════════ LOGIN SCREEN ═══════════════════ */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+    .login-icon { font-size: 3.5rem; margin-bottom: 16px; display: block; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .login-card h1 {
+      font-size: 1.9rem; font-weight: 800; margin-bottom: 6px;
+      background: linear-gradient(135deg,#38bdf8,#818cf8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .login-card p { color: var(--muted); font-size: .9rem; margin-bottom: 32px; }
+    .login-input {
+      width: 100%; background: rgba(255,255,255,.05); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; color: var(--text);
+      font-size: 1rem; font-family: var(--mono); outline: none;
+      transition: all .2s; margin-bottom: 12px; letter-spacing: 2px;
+    }
+    .login-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
+    .login-btn {
+      width: 100%; background: linear-gradient(135deg,#38bdf8,#818cf8);
+      border: none; border-radius: 12px; padding: 14px; color: #000;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all .2s;
+    }
+    .login-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 8px 25px rgba(56,189,248,.3); }
+    .login-error { color: var(--danger); font-size: .85rem; margin-top: 12px; min-height: 20px; }
+
+    /* ═══════════════════ ADMIN LAYOUT ═══════════════════ */
+    #admin-app { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      width: var(--sidebar-w);
+      background: rgba(5,9,20,.92);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100; padding: 0;
+      transition: transform .3s;
+    }
+    .sidebar-brand {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px; border-bottom: 1px solid var(--border);
+    }
+    .brand-icon { font-size: 1.6rem; }
+    .brand-text { font-weight: 800; font-size: 1rem; }
+    .brand-sub { font-size: .68rem; color: var(--muted); font-family: var(--mono); letter-spacing: 1px; }
+    .nav-section-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted-2); font-family: var(--mono); padding: 16px 20px 6px; font-weight: 600; }
+    .nav-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 20px; color: var(--muted); text-decoration: none;
+      font-weight: 500; font-size: .92rem; transition: all .2s;
+      border-left: 3px solid transparent; cursor: pointer;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,.04); }
+    .nav-link.active { color: var(--primary); background: rgba(56,189,248,.08); border-left-color: var(--primary); }
+    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); }
+    .admin-badge { font-size: .75rem; color: var(--muted); font-family: var(--mono); margin-bottom: 10px; text-align: center; }
+    .admin-badge strong { color: var(--primary); }
+    .logout-btn {
+      width: 100%; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
+      color: var(--danger); border-radius: 10px; padding: 10px; cursor: pointer;
+      font-weight: 600; font-size: .9rem; transition: all .2s;
+    }
+    .logout-btn:hover { background: rgba(239,68,68,.2); }
+
+    /* ── Main Content ── */
+    #main-content { flex: 1; margin-left: var(--sidebar-w); padding: 32px; min-width: 0; }
+    .tab-section { display: none; animation: fadeIn .3s ease; }
+    .tab-section.active { display: block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .page-title { font-size: 1.5rem; font-weight: 800; }
+    .page-title span { background: linear-gradient(135deg,#38bdf8,#818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .page-sub { color: var(--muted); font-size: .88rem; margin-top: 4px; }
+
+    /* ── Stats Grid ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px; backdrop-filter: blur(10px); transition: all .3s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,.2); }
+    .stat-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: var(--mono); font-weight: 600; margin-bottom: 10px; }
+    .stat-value { font-size: 2.2rem; font-weight: 800; font-family: var(--mono); }
+    .stat-icon { font-size: 1.5rem; margin-bottom: 6px; }
+    .stat-card.c-blue .stat-value { color: var(--primary); }
+    .stat-card.c-green .stat-value { color: var(--success); }
+    .stat-card.c-yellow .stat-value { color: var(--warn); }
+    .stat-card.c-red .stat-value { color: var(--danger); }
+
+    /* ── Panels ── */
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; backdrop-filter: blur(10px); margin-bottom: 24px; overflow: hidden; }
+    .panel-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .panel-title { font-weight: 700; font-size: .98rem; display: flex; align-items: center; gap: 8px; }
+    .panel-body { padding: 24px; }
+
+    /* ── Forms ── */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin-bottom: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-family: var(--mono); font-weight: 600; }
+    .form-input, .form-select, .form-textarea {
+      background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 14px; color: var(--text); font-family: var(--sans); font-size: .95rem;
+      outline: none; transition: all .2s; width: 100%;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,189,248,.1); }
+    .form-select option { background: #0f172a; }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--muted-2); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 10px; border: none; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .2s; font-family: var(--sans); white-space: nowrap; }
+    .btn-primary { background: var(--primary); color: #000; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(56,189,248,.4); }
+    .btn-success { background: rgba(34,197,94,.15); color: var(--success); border: 1px solid rgba(34,197,94,.3); }
+    .btn-success:hover { background: rgba(34,197,94,.25); }
+    .btn-danger { background: rgba(239,68,68,.15); color: var(--danger); border: 1px solid rgba(239,68,68,.3); }
+    .btn-danger:hover { background: rgba(239,68,68,.25); }
+    .btn-ghost { background: rgba(255,255,255,.05); color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); background: rgba(255,255,255,.1); }
+    .btn-warn { background: rgba(245,158,11,.15); color: var(--warn); border: 1px solid rgba(245,158,11,.3); }
+    .btn-warn:hover { background: rgba(245,158,11,.25); }
+    .btn-sm { padding: 6px 12px; font-size: .78rem; border-radius: 8px; }
+    .btn-xs { padding: 4px 10px; font-size: .75rem; border-radius: 7px; }
+
+    /* ── Tables ── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { text-align: left; padding: 11px 14px; font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-family: var(--mono); border-bottom: 1px solid var(--border); font-weight: 600; }
+    .data-table td { padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,.04); font-size: .88rem; vertical-align: middle; }
+    .data-table tr:last-child td { border-bottom: 0; }
+    .data-table tr:hover td { background: rgba(255,255,255,.025); }
+    .table-wrap { overflow-x: auto; }
+
+    /* ── Badges ── */
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: .72rem; font-weight: 700; font-family: var(--mono); white-space: nowrap; }
+    .badge-active { background: rgba(34,197,94,.15); color: var(--success); border: 1px solid rgba(34,197,94,.3); }
+    .badge-used { background: rgba(148,163,184,.1); color: var(--muted); border: 1px solid var(--border); }
+    .badge-expired { background: rgba(245,158,11,.1); color: var(--warn); border: 1px solid rgba(245,158,11,.3); }
+    .badge-blocked { background: rgba(239,68,68,.1); color: var(--danger); border: 1px solid rgba(239,68,68,.3); }
+    .badge-lifetime { background: rgba(129,140,248,.15); color: var(--purple); border: 1px solid rgba(129,140,248,.3); }
+
+    /* ── Generated Key ── */
+    .gen-key-box {
+      background: rgba(56,189,248,.07); border: 2px dashed rgba(56,189,248,.35);
+      border-radius: 14px; padding: 20px 24px; margin-top: 20px; display: none; animation: fadeIn .3s ease;
+    }
+    .gen-key-box.show { display: block; }
+    .gen-key-label { font-size: .78rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; font-family: var(--mono); margin-bottom: 8px; font-weight: 600; }
+    .gen-key-value { font-family: var(--mono); font-size: 1.5rem; font-weight: 800; letter-spacing: 3px; color: var(--text); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .gen-key-meta { margin-top: 10px; font-size: .83rem; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+    .gen-key-meta strong { color: var(--warn); }
+
+    /* ── Filter Bar ── */
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-input { flex: 1; min-width: 200px; background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: var(--text); font-family: var(--sans); font-size: .9rem; outline: none; transition: all .2s; }
+    .filter-input:focus { border-color: var(--border-focus); }
+    .filter-input::placeholder { color: var(--muted-2); }
+
+    /* ── Empty State ── */
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
+    .empty-state .ei { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+    .empty-state p { font-size: .92rem; }
+
+    /* ── Clock ── */
+    .clock-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .clock-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-family: var(--mono); font-size: .82rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .clock-pill span.val { color: var(--primary); font-weight: 700; }
+
+    /* ── Mono small ── */
+    .mono-sm { font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+    .key-txt { font-family: var(--mono); font-size: .92rem; font-weight: 700; color: var(--primary); letter-spacing: 1.5px; }
+
+    /* ── Toast ── */
+    #toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: .9rem; transform: translateY(100px); opacity: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); z-index: 9999; pointer-events: none; }
+    #toast.show-ok { background: var(--success); color: #000; transform: translateY(0); opacity: 1; }
+    #toast.show-err { background: var(--danger); color: #fff; transform: translateY(0); opacity: 1; }
+
+    /* ── Confirm Modal ── */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(5,9,20,.85); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-card { background: rgba(15,23,42,.95); border: 1px solid var(--border); border-radius: 20px; padding: 32px; max-width: 400px; width: 100%; text-align: center; }
+    .modal-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+    .modal-card p { color: var(--muted); font-size: .9rem; margin-bottom: 24px; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      #sidebar { width: 100%; height: auto; position: fixed; bottom: 0; top: auto; flex-direction: row; padding: 0; border-right: none; border-top: 1px solid var(--border); }
+      .sidebar-brand, .sidebar-footer, .nav-section-label { display: none; }
+      #sidebar nav { display: flex; flex: 1; }
+      .nav-link { flex-direction: column; gap: 2px; padding: 10px 8px; font-size: .68rem; border-left: none; border-top: 3px solid transparent; flex: 1; justify-content: center; align-items: center; }
+      .nav-link.active { border-left-color: transparent; border-top-color: var(--primary); }
+      .nav-icon { font-size: 1.3rem; }
+      #main-content { margin-left: 0; padding: 20px; padding-bottom: 90px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 1.3rem; }
+    }
+  
+    /* ── User Dossier Modal ── */
+    .dossier-modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(5,9,20,0.88);
+      backdrop-filter: blur(12px);
+      z-index: 600;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .dossier-modal-card {
+      background: rgba(15,23,42,0.96);
+      border: 1px solid var(--border-focus);
+      border-radius: 24px;
+      width: 100%; max-width: 780px;
+      max-height: 90vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.7), 0 0 50px rgba(56,189,248,0.15);
+      animation: fadeIn .25s ease;
+      overflow: hidden;
+    }
+    .dossier-header {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      background: rgba(255,255,255,0.02);
+    }
+    .dossier-body {
+      padding: 24px 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .dossier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .dossier-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .dossier-box-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-family: var(--mono);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .dossier-box-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      word-break: break-all;
+    }
+    .stalker-alert-box {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.15);
+    }
+    .stalker-alert-title {
+      color: var(--danger);
+      font-weight: 800;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .tr-clickable {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .tr-clickable:hover td {
+      background: rgba(56, 189, 248, 0.08) !important;
+    }
+    .tr-stalker td {
+      border-left: 3px solid var(--danger);
+    }
+    .badge-stalker {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ LOGIN SCREEN ══════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <span class="login-icon">👑</span>
+    <h1>Afzal Admin</h1>
+    <p>Apna admin password enter karo access ke liye</p>
+    <input type="password" class="login-input" id="admin-pass" placeholder="Password"
+           onkeydown="if(event.key==='Enter') adminLogin()">
+    <button class="login-btn" onclick="adminLogin()">🔓 Access Admin Panel</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ADMIN APP ══════════════════════ -->
+<div id="admin-app" hidden>
+
+  <!-- ── Sidebar ── -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">👑</span>
+      <div>
+        <div class="brand-text">Afzal Admin</div>
+        <div class="brand-sub">CONTROL PANEL v2</div>
+      </div>
+    </div>
+    <nav id="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="nav-link active" onclick="showTab('dashboard',this)">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a class="nav-link" onclick="showTab('keys',this)">
+        <span class="nav-icon">🔑</span> Keys
+      </a>
+      <a class="nav-link" onclick="showTab('devices',this)">
+        <span class="nav-icon">📱</span> Devices
+      </a>
+      <a class="nav-link" onclick="showTab('history',this)">
+        <span class="nav-icon">📜</span> History
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="admin-badge">Logged in as <strong>Afzal 👑</strong></div>
+      <button class="logout-btn" onclick="adminLogout()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main id="main-content">
+
+    <!-- ════════ DASHBOARD ════════ -->
+    <section id="tab-dashboard" class="tab-section active">
+      <div class="page-header">
+        <div>
+          <div class="page-title">👋 Welcome, <span>Afzal</span></div>
+          <div class="page-sub">Apne lookup system ka full control yahan hai</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadAll()">↻ Refresh All</button>
+      </div>
+
+      <div class="clock-bar" id="clock-bar">
+        <div class="clock-pill">📅 Date: <span class="val" id="cl-date">—</span></div>
+        <div class="clock-pill">⏰ Time: <span class="val" id="cl-time">—</span></div>
+        <div class="clock-pill">🌏 Timezone: <span class="val">IST (+5:30)</span></div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card c-blue">
+          <div class="stat-icon">🔑</div>
+          <div class="stat-label">Total Keys</div>
+          <div class="stat-value" id="st-keys">—</div>
+        </div>
+        <div class="stat-card c-green">
+          <div class="stat-icon">📱</div>
+          <div class="stat-label">Active Devices</div>
+          <div class="stat-value" id="st-devices">—</div>
+        </div>
+        <div class="stat-card c-yellow">
+          <div class="stat-icon">🔍</div>
+          <div class="stat-label">Total Searches</div>
+          <div class="stat-value" id="st-searches">—</div>
+        </div>
+        <div class="stat-card c-red">
+          <div class="stat-icon">🚫</div>
+          <div class="stat-label">Blocked Devices</div>
+          <div class="stat-value" id="st-blocked">—</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.06);">
+          <div class="stat-icon">🚨</div>
+          <div class="stat-label" style="color:#fca5a5;">Owner Alerts</div>
+          <div class="stat-value" style="color:var(--danger);" id="st-alerts">0</div>
+        </div>
+      </div>
+
+      <!-- 🚨 OWNER NUMBER SEARCH ATTEMPTS PANEL -->
+      <div class="panel" style="border-color: rgba(239, 68, 68, 0.4); margin-bottom: 24px;">
+        <div class="panel-header" style="background: rgba(239, 68, 68, 0.08);">
+          <div class="panel-title" style="color: #fca5a5;">
+            <span>🚨</span> Owner Number Stalking Attempts (Live Alerts)
+          </div>
+          <span class="mono-sm" id="alerts-count-label" style="color:#fca5a5;">0 alerts</span>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Target Owner No.</th>
+                  <th>Intruder Device ID</th>
+                  <th>Intruder IP</th>
+                  <th>Platform / OS</th>
+                  <th>Date & Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="dash-owner-alerts">
+                <tr><td colspan="6"><div class="empty-state"><span class="ei">🛡️</span><p>Koi intrusion alert nahi hai abhi tak. Sab safe hai!</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📋 Recent Searches (Last 5)</div>
+          <button class="btn btn-ghost btn-xs" onclick="showTab('history',document.querySelector('.nav-link:nth-child(5)'))">View All →</button>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Number</th><th>Device</th><th>Time</th><th>Results</th></tr></thead>
+              <tbody id="dash-recent">
+                <tr><td colspan="4"><div class="empty-state"><span class="ei">⏳</span><p>Loading...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ KEYS ════════ -->
+    <section id="tab-keys" class="tab-section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🔑 <span>Key</span> Manager</div>
+          <div class="page-sub">Keys generate karo aur manage karo</div>
+        </div>
+      </div>
+
+      <!-- Key Generator -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">✨ Generate New Key</div>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group" style="grid-column:1/-1">
+              <label class="form-label">Label / User Name</label>
+              <input type="text" class="form-input" id="key-label" placeholder="e.g. Rahul bhai ke liye, Test user, VIP...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Key Type</label>
+              <select class="form-select" id="key-type">
+                <option value="single">📱 Single Device (Ek baar use)</option>
+                <option value="multi">♾️ Multi Device (Multiple use)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiry Duration</label>
+              <select class="form-select" id="expiry-preset" onchange="toggleCustomExpiry()">
+                <option value="30m">⚡ 30 Minutes</option>
+                <option value="1h">1 Hour</option>
+                <option value="6h">6 Hours</option>
+                <option value="12h">12 Hours</option>
+                <option value="1d">1 Day</option>
+                <option value="3d">3 Days</option>
+                <option value="7d" selected>7 Days</option>
+                <option value="15d">15 Days</option>
+                <option value="30d">30 Days (1 Month)</option>
+                <option value="90d">90 Days (3 Months)</option>
+                <option value="180d">180 Days (6 Months)</option>
+                <option value="365d">1 Year</option>
+                <option value="lifetime">♾️ Lifetime</option>
+                <option value="custom">📅 Custom Date & Time</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Custom Date/Time (shown only for "custom") -->
+          <div id="custom-expiry-row" style="display:none; margin-bottom:20px;">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Expiry Date</label>
+                <input type="date" class="form-input" id="custom-date">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Expiry Time (HH:MM:SS)</label>
+                <input type="time" class="form-input" id="custom-time" step="1">
+              </div>
+            </div>
+            <div style="margin-top:8px; font-size:.8rem; color:var(--muted);">
+              ⚠️ Exact second tak set kar sakte ho. Sirf future date/time daalo.
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <button class="btn btn-primary" onclick="generateKey()">✨ Generate Key</button>
+            <span style="font-size:.82rem;color:var(--muted);">Format: AFZ-XXXX-XXXX-XXXX</span>
+          </div>
+
+          <!-- Generated Key Display -->
+          <div class="gen-key-box" id="gen-key-box">
+            <div class="gen-key-label">🎉 Key Generate Ho Gayi!</div>
+            <div class="gen-key-value">
+              <span id="gen-key-txt">—</span>
+              <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('gen-key-txt').textContent)">📋 Copy</button>
+            </div>
+            <div class="gen-key-meta">
+              <span>Expires: <strong id="gen-key-expiry">—</strong></span>
+              <span>Type: <strong style="color:var(--purple)" id="gen-key-type">—</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Keys List -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📋 All Keys</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="mono-sm" id="keys-count-label">— keys</span>
+            <button class="btn btn-ghost btn-xs" onclick="loadKeys()">↻</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="filter-bar">
+            <input type="text" class="filter-input" placeholder="🔍 Search key or label..." id="key-search" oninput="filterKeys()">
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Key</th><th>Label</th><th>Type</th><th>Created</th><th>Expiry</th><th>Status</th><th>Used By</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="keys-tbody">
+                <tr><td colspan="8"><div class="empty-state"><span class="ei">⏳</span><p>Loading...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ DEVICES ════════ -->
+    <section id="tab-devices" class="tab-section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📱 <span>Device</span> Manager</div>
+          <div class="page-sub">Registered devices ka control</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadDevices()">↻ Refresh</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📱 All Registered Devices</div>
+          <span class="mono-sm" id="devices-count-label">— devices</span>
+        </div>
+        <div class="panel-body">
+          <div class="filter-bar">
+            <input type="text" class="filter-input" placeholder="🔍 Search device ID or key..." id="dev-search" oninput="filterDevices()">
+            <button class="btn btn-danger btn-sm" onclick="deleteAllDevices()">🗑️ Clear All</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Device ID</th><th>Key Used</th><th>Registered</th><th>Expiry</th><th>Last Seen</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="devices-tbody">
+                <tr><td colspan="7"><div class="empty-state"><span class="ei">⏳</span><p>Loading...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ HISTORY ════════ -->
+    <section id="tab-history" class="tab-section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📜 Search <span>History</span></div>
+          <div class="page-sub">Tamam devices ke recent number lookups</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="loadHistory()">↻ Refresh</button>
+          <button class="btn btn-danger btn-sm" onclick="clearAllHistory()">🗑️ Clear All</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📋 Lookup Records</div>
+          <span class="mono-sm" id="history-count-label">— records</span>
+        </div>
+        <div class="panel-body">
+          <div class="filter-bar">
+            <input type="text" class="filter-input" placeholder="🔍 Number ya device se filter karo..." id="hist-search" oninput="filterHistory()">
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Number</th><th>Device ID</th><th>Date & Time</th><th>Results</th></tr>
+              </thead>
+              <tbody id="history-tbody">
+                <tr><td colspan="4"><div class="empty-state"><span class="ei">⏳</span><p>Loading...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Confirm Modal -->
+<!-- ════════ User Dossier Modal ════════ -->
+<div id="user-dossier-modal" class="dossier-modal-backdrop" style="display:none;">
+  <div class="dossier-modal-card">
+    <div class="dossier-header">
+      <div>
+        <div style="font-size:1.25rem; font-weight:800; display:flex; align-items:center; gap:10px;">
+          <span id="dossier-name-label">User Profile</span>
+          <span id="dossier-status-badge"></span>
+        </div>
+        <div style="font-family:var(--mono); font-size:0.8rem; color:var(--muted); margin-top:4px;">
+          Device ID: <span id="dossier-dev-id" style="color:var(--primary); font-weight:700;">-</span>
+          <button class="btn btn-ghost btn-xs" style="margin-left:6px;" onclick="copyText(document.getElementById('dossier-dev-id').textContent)">📋 Copy</button>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-ghost btn-sm" onclick="closeUserDossier()">✕ Close</button>
+      </div>
+    </div>
+
+    <div class="dossier-body">
+      <!-- Quick Action Controls -->
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:14px; padding:14px 18px; margin-bottom:20px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <span style="font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-family:var(--mono); font-weight:700;">Quick Actions:</span>
+        <button class="btn btn-danger btn-sm" id="dossier-block-btn" onclick="toggleDossierBlock()">🚫 Block User</button>
+        <button class="btn btn-success btn-sm" id="dossier-unblock-btn" onclick="toggleDossierBlock()" style="display:none;">✅ Unblock User</button>
+        <button class="btn btn-ghost btn-sm" onclick="extendDossierExpiry(7)">⏳ +7 Days</button>
+        <button class="btn btn-ghost btn-sm" onclick="extendDossierExpiry(30)">⏳ +30 Days</button>
+        <button class="btn btn-ghost btn-sm" onclick="makeDossierLifetime()">♾️ Grant Lifetime</button>
+        <button class="btn btn-danger btn-sm" style="margin-left:auto;" onclick="deleteDossierDevice()">🗑️ Delete</button>
+      </div>
+
+      <!-- Owner Alert Box inside Dossier (if intruder) -->
+      <div id="dossier-stalker-box" class="stalker-alert-box" style="display:none;">
+        <div class="stalker-alert-title">
+          <span>🚨</span> SECURITY WARNING: Intruder Attempted Owner Search!
+        </div>
+        <div style="font-size:0.88rem; color:#fca5a5; line-height:1.6;" id="dossier-stalker-desc">
+          Is device ne Afzal Ansari ka personal number search karne ki koshish ki thi.
+        </div>
+      </div>
+
+      <!-- Specs & Telemetry Grid -->
+      <div class="dossier-grid">
+        <div class="dossier-box">
+          <div class="dossier-box-label">🌐 IP Address</div>
+          <div class="dossier-box-val" id="d-ip" style="color:var(--primary); font-family:var(--mono);">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">💻 OS & Platform</div>
+          <div class="dossier-box-val" id="d-os">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">🌐 Browser</div>
+          <div class="dossier-box-val" id="d-browser">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">📺 Screen Size</div>
+          <div class="dossier-box-val" id="d-screen" style="font-family:var(--mono);">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">⏰ Timezone & Language</div>
+          <div class="dossier-box-val" id="d-tz" style="font-size:0.85rem;">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">🔑 Key Used</div>
+          <div class="dossier-box-val" id="d-key" style="color:var(--primary); font-family:var(--mono); font-size:0.88rem;">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">📅 Registered At</div>
+          <div class="dossier-box-val" id="d-reg" style="font-size:0.85rem; font-family:var(--mono);">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">⌛ Expiry Date</div>
+          <div class="dossier-box-val" id="d-exp" style="font-size:0.85rem; font-family:var(--mono); color:var(--warn);">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">👁️ Last Seen</div>
+          <div class="dossier-box-val" id="d-seen" style="font-size:0.85rem; font-family:var(--mono);">-</div>
+        </div>
+        <div class="dossier-box">
+          <div class="dossier-box-label">🔍 Total Searches Done</div>
+          <div class="dossier-box-val" id="d-searches" style="font-size:1.4rem; color:var(--success); font-family:var(--mono);">0</div>
+        </div>
+      </div>
+
+      <!-- User Agent details -->
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:24px; font-family:var(--mono); font-size:0.75rem; color:var(--muted); word-break:break-all;">
+        <span style="font-weight:700; color:var(--muted-2);">USER AGENT:</span> <span id="d-ua">-</span>
+      </div>
+
+      <!-- Lookup History of THIS Specific User -->
+      <div class="panel" style="margin-bottom:0;">
+        <div class="panel-header">
+          <div class="panel-title">📜 Search History of this User</div>
+          <span class="mono-sm" id="dossier-hist-count">0 records</span>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Number Searched</th><th>Date & Time</th><th>Result</th></tr></thead>
+              <tbody id="dossier-history-tbody">
+                <tr><td colspan="3"><div class="empty-state"><span class="ei">⏳</span><p>Loading user history...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="confirm-modal" class="modal-backdrop" style="display:none;">
+  <div class="modal-card">
+    <div style="font-size:2rem;margin-bottom:12px;" id="confirm-icon">⚠️</div>
+    <h3 id="confirm-title">Are you sure?</h3>
+    <p id="confirm-msg">Yeh action undo nahi hogi.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok-btn" onclick="confirmOk()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// ⚙️  FIREBASE CONFIG — Afzal OSINT Firebase Project
+// ════════════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyDn9hzdu63ALoh8-FA-WYHB-Kim0o5lV3w",
+  authDomain: "afzalosint.firebaseapp.com",
+  projectId: "afzalosint",
+  storageBucket: "afzalosint.firebasestorage.app",
+  messagingSenderId: "996630010339",
+  appId: "1:996630010339:web:31624c2e46f6efa19a28d6",
+  measurementId: "G-RCXS6PEXKQ"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ════════════════════════════════════════════════════════════
+// 🔐 ADMIN PASSWORD — Afzal Ansari Admin Access
+// ════════════════════════════════════════════════════════════
+const ADMIN_PASS = "Afzal@2024";
+
+// ═══ AUTH ═══════════════════════════════════════════════════
+let isLoggedIn = false;
+
+function adminLogin() {
+  const entered = document.getElementById('admin-pass').value;
+  const errEl   = document.getElementById('login-error');
+  if (entered === ADMIN_PASS) {
+    isLoggedIn = true;
+    sessionStorage.setItem('afzal_admin_sess', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-app').removeAttribute('hidden');
+    loadAll();
+    startClock();
+  } else {
+    errEl.textContent = '❌ Galat password! Dobara try karo.';
+    document.getElementById('admin-pass').value = '';
+    setTimeout(() => errEl.textContent = '', 3000);
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('afzal_admin_sess');
+  isLoggedIn = false;
+  location.reload();
+}
+
+// Auto-login from session
+if (sessionStorage.getItem('afzal_admin_sess') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-app').removeAttribute('hidden');
+  isLoggedIn = true;
+  loadAll();
+  startClock();
+}
+
+// ═══ CLOCK ══════════════════════════════════════════════════
+function startClock() {
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+function updateClock() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-IN', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+  const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  const dEl = document.getElementById('cl-date'); if(dEl) dEl.textContent = dateStr;
+  const tEl = document.getElementById('cl-time'); if(tEl) tEl.textContent = timeStr;
+}
+
+// ═══ NAVIGATION ═════════════════════════════════════════════
+function showTab(tab, el) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (el) el.classList.add('active');
+  if (tab === 'keys')    loadKeys();
+  if (tab === 'devices') loadDevices();
+  if (tab === 'history') loadHistory();
+}
+
+function loadAll() {
+  loadDashboard();
+  loadKeys();
+  loadDevices();
+  loadHistory();
+}
+
+// ═══ KEY GENERATION ═════════════════════════════════════════
+function genKeyStr() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  return `AFZ-${seg()}-${seg()}-${seg()}`;
+}
+
+function toggleCustomExpiry() {
+  const v = document.getElementById('expiry-preset').value;
+  document.getElementById('custom-expiry-row').style.display = v === 'custom' ? 'block' : 'none';
+}
+
+function calculateExpiry(preset) {
+  if (preset === 'lifetime') return { date: new Date('2099-01-01'), isLifetime: true };
+  if (preset === 'custom') {
+    const d = document.getElementById('custom-date').value;
+    const t = document.getElementById('custom-time').value || '23:59:59';
+    if (!d) { toast('❌ Custom date daalo!', true); return null; }
+    const dt = new Date(`${d}T${t}`);
+    if (dt <= new Date()) { toast('❌ Future date daalo!', true); return null; }
+    return { date: dt, isLifetime: false };
+  }
+  const now = new Date();
+  const mins = { '30m':30, '1h':60, '6h':360, '12h':720, '1d':1440, '3d':4320, '7d':10080, '15d':21600, '30d':43200, '90d':129600, '180d':259200, '365d':525600 };
+  const m = mins[preset] || 10080;
+  return { date: new Date(now.getTime() + m * 60000), isLifetime: false };
+}
+
+function formatExpiry(exp) {
+  if (exp.isLifetime) return '♾️ Lifetime';
+  return exp.date.toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+let allKeys = [];
+
+async function generateKey() {
+  const label   = document.getElementById('key-label').value.trim() || 'User';
+  const keyType = document.getElementById('key-type').value;
+  const preset  = document.getElementById('expiry-preset').value;
+  const exp     = calculateExpiry(preset);
+  if (!exp) return;
+
+  const keyStr = genKeyStr();
+
+  try {
+    await db.collection('keys').add({
+      key:        keyStr,
+      label:      label,
+      type:       keyType,
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+      expiry:     firebase.firestore.Timestamp.fromDate(exp.date),
+      is_lifetime: exp.isLifetime,
+      is_used:    false,
+      used_by:    null,
+      used_at:    null,
+      is_blocked: false,
+    });
+
+    document.getElementById('gen-key-txt').textContent    = keyStr;
+    document.getElementById('gen-key-expiry').textContent = formatExpiry(exp);
+    document.getElementById('gen-key-type').textContent   = keyType === 'single' ? '📱 Single Device' : '♾️ Multi Device';
+    document.getElementById('gen-key-box').classList.add('show');
+    document.getElementById('key-label').value = '';
+
+    toast('✅ Key generate ho gayi!');
+    loadKeys();
+    loadDashboard();
+  } catch(e) {
+    toast('❌ Error: ' + e.message, true);
+  }
+}
+
+// ═══ LOAD KEYS ══════════════════════════════════════════════
+async function loadKeys() {
+  try {
+    const snap = await db.collection('keys').orderBy('created_at','desc').get();
+    allKeys = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    document.getElementById('keys-count-label').textContent = allKeys.length + ' keys';
+    renderKeys(allKeys);
+  } catch(e) { console.error(e); }
+}
+
+function getKeyStatus(k) {
+  if (k.is_blocked) return 'blocked';
+  if (k.is_lifetime) return 'active';
+  const exp = k.expiry?.toDate?.() || new Date(k.expiry);
+  if (exp < new Date()) return 'expired';
+  if (k.is_used && k.type === 'single') return 'used';
+  return 'active';
+}
+
+function renderKeys(keys) {
+  const tbody = document.getElementById('keys-tbody');
+  if (!keys.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><span class="ei">🔑</span><p>Koi key nahi hai. Upar generate karo.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = keys.map(k => {
+    const st  = getKeyStatus(k);
+    const exp = k.is_lifetime ? '♾️ Lifetime' : (k.expiry?.toDate?.() || new Date()).toLocaleString('en-IN');
+    const cre = k.created_at?.toDate?.()?.toLocaleString('en-IN') || '—';
+    const usedBy = k.used_by ? `<span class="mono-sm" title="${escH(k.used_by)}">${escH(k.used_by.substring(0,16))}…</span>` : '<span style="color:var(--muted-2)">—</span>';
+    return `<tr>
+      <td><span class="key-txt">${escH(k.key)}</span></td>
+      <td>${escH(k.label||'—')}</td>
+      <td><span class="mono-sm">${k.type==='single'?'📱 Single':'♾️ Multi'}</span></td>
+      <td><span class="mono-sm">${cre}</span></td>
+      <td><span class="mono-sm">${exp}</span></td>
+      <td>${getBadge(st)}</td>
+      <td>${usedBy}</td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-xs" onclick="copyText('${escH(k.key)}')">📋</button>
+          ${st!=='blocked'
+            ? `<button class="btn btn-warn btn-xs" onclick="blockKey('${k.id}',true)">Block</button>`
+            : `<button class="btn btn-success btn-xs" onclick="blockKey('${k.id}',false)">Unblock</button>`}
+          <button class="btn btn-danger btn-xs" onclick="confirmAction('key-delete','${k.id}')">Del</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterKeys() {
+  const q = document.getElementById('key-search').value.toLowerCase();
+  renderKeys(allKeys.filter(k => (k.key||'').toLowerCase().includes(q) || (k.label||'').toLowerCase().includes(q)));
+}
+
+async function blockKey(id, block) {
+  await db.collection('keys').doc(id).update({is_blocked: block});
+  toast(block ? '🚫 Key block ho gayi!' : '✅ Key unblock ho gayi!');
+  loadKeys();
+}
+
+async function deleteKeyById(id) {
+  await db.collection('keys').doc(id).delete();
+  toast('🗑️ Key delete ho gayi!');
+  loadKeys(); loadDashboard();
+}
+
+// ═══ LOAD DEVICES ════════════════════════════════════════════
+let allDevices = [];
+
+async function loadDevices() {
+  try {
+    const snap = await db.collection('devices').orderBy('registered_at','desc').get();
+    allDevices = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    document.getElementById('devices-count-label').textContent = allDevices.length + ' devices';
+    renderDevices(allDevices);
+  } catch(e) { console.error(e); }
+}
+
+function renderDevices(devices) {
+  const tbody = document.getElementById('devices-tbody');
+  if (!devices.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="ei">📱</span><p>Koi device register nahi hua abhi tak.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = devices.map(d => {
+    const exp     = d.is_lifetime ? '♾️ Lifetime' : (d.expiry?.toDate?.() || new Date()).toLocaleString('en-IN');
+    const reg     = d.registered_at?.toDate?.()?.toLocaleString('en-IN') || '—';
+    const seen    = d.last_seen?.toDate?.()?.toLocaleString('en-IN') || '—';
+    const expDate = d.is_lifetime ? new Date('2099-01-01') : (d.expiry?.toDate?.() || new Date());
+    let st = d.is_blocked ? 'blocked' : (expDate < new Date() ? 'expired' : 'active');
+    const isStalker = Boolean(d.has_owner_attempt);
+
+    return `<tr class="tr-clickable ${isStalker ? 'tr-stalker' : ''}" onclick="openUserDossier('${escH(d.id)}')">
+      <td>
+        <div style="font-weight:700; color:#fff;">${escH(d.key_label || 'User')}</div>
+        <span class="mono-sm" title="${escH(d.id)}">${escH(d.id.substring(0,20))}…</span>
+        ${isStalker ? '<span class="badge badge-stalker" style="margin-left:6px;">🚨 STALKER</span>' : ''}
+      </td>
+      <td><span class="key-txt" style="font-size:.8rem">${escH(d.key_used||'—')}</span></td>
+      <td><span class="mono-sm">${reg}</span></td>
+      <td><span class="mono-sm">${exp}</span></td>
+      <td><span class="mono-sm">${seen}</span></td>
+      <td>${getBadge(st)}</td>
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;gap:5px;">
+          <button class="btn btn-ghost btn-xs" onclick="openUserDossier('${escH(d.id)}')">👁️ View</button>
+          ${d.is_blocked
+            ? `<button class="btn btn-success btn-xs" onclick="toggleDevice('${d.id}',false)">Unblock</button>`
+            : `<button class="btn btn-warn btn-xs" onclick="toggleDevice('${d.id}',true)">Block</button>`}
+          <button class="btn btn-danger btn-xs" onclick="confirmAction('dev-delete','${d.id}')">Del</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterDevices() {
+  const q = document.getElementById('dev-search').value.toLowerCase();
+  renderDevices(allDevices.filter(d => 
+    d.id.toLowerCase().includes(q) || 
+    (d.key_used||'').toLowerCase().includes(q) ||
+    (d.key_label||'').toLowerCase().includes(q) ||
+    (d.ip||'').toLowerCase().includes(q)
+  ));
+}
+
+async function toggleDevice(id, block) {
+  await db.collection('devices').doc(id).update({is_blocked: block});
+  toast(block ? '🚫 Device block kar diya gaya!' : '✅ Device unblock ho gaya!');
+  loadDevices(); loadDashboard();
+}
+
+async function deleteDeviceById(id) {
+  await db.collection('devices').doc(id).delete();
+  toast('🗑️ Device delete ho gaya!');
+  loadDevices(); loadDashboard();
+}
+
+async function deleteAllDevices() {
+  confirmAction('dev-delete-all', null);
+}
+
+// ════════════════════════════════════════════════════════════
+// 📱 USER DOSSIER MODAL (CLICK ON ANY USER FOR FULL DETAILS)
+// ════════════════════════════════════════════════════════════
+let currentDossierDevice = null;
+
+async function openUserDossier(deviceId) {
+  const modal = document.getElementById('user-dossier-modal');
+  modal.style.display = 'flex';
+
+  let dev = allDevices.find(d => d.id === deviceId);
+  if (!dev) {
+    try {
+      const doc = await db.collection('devices').doc(deviceId).get();
+      if (doc.exists) dev = { id: doc.id, ...doc.data() };
+    } catch(e) { console.error(e); }
+  }
+  if (!dev) { toast('Device record not found', true); return; }
+
+  currentDossierDevice = dev;
+
+  // Header
+  document.getElementById('dossier-name-label').textContent = dev.key_label || 'User Profile';
+  document.getElementById('dossier-dev-id').textContent     = dev.id;
+
+  const expDate = dev.is_lifetime ? new Date('2099-01-01') : (dev.expiry?.toDate?.() || new Date(dev.expiry));
+  const st = dev.is_blocked ? 'blocked' : (expDate < new Date() ? 'expired' : 'active');
+  document.getElementById('dossier-status-badge').innerHTML = getBadge(st);
+
+  // Toggle Action Buttons
+  if (dev.is_blocked) {
+    document.getElementById('dossier-block-btn').style.display   = 'none';
+    document.getElementById('dossier-unblock-btn').style.display = 'inline-flex';
+  } else {
+    document.getElementById('dossier-block-btn').style.display   = 'inline-flex';
+    document.getElementById('dossier-unblock-btn').style.display = 'none';
+  }
+
+  // Stalker Alert Box inside Dossier
+  const sBox = document.getElementById('dossier-stalker-box');
+  if (dev.has_owner_attempt) {
+    sBox.style.display = 'block';
+    const lastAttempt = dev.last_owner_attempt?.toDate?.()?.toLocaleString('en-IN') || 'Recently';
+    const count = dev.owner_attempt_count || 1;
+    document.getElementById('dossier-stalker-desc').innerHTML = `
+      ⚠️ Yeh device <strong>${count} baar</strong> Afzal Ansari ka personal number search karne ki koshish kar chuka hai! (Last attempt: ${lastAttempt}).
+    `;
+  } else {
+    sBox.style.display = 'none';
+  }
+
+  // Telemetry Grid
+  document.getElementById('d-ip').textContent       = dev.ip || 'Not recorded';
+  document.getElementById('d-os').textContent       = dev.os || 'Unknown OS';
+  document.getElementById('d-browser').textContent  = dev.browser || 'Unknown';
+  document.getElementById('d-screen').textContent   = dev.screen || 'Unknown';
+  document.getElementById('d-tz').textContent       = (dev.timezone || '-') + ' / ' + (dev.language || '-');
+  document.getElementById('d-key').textContent      = dev.key_used || 'None';
+  document.getElementById('d-reg').textContent      = dev.registered_at?.toDate?.()?.toLocaleString('en-IN') || '—';
+  document.getElementById('d-exp').textContent      = dev.is_lifetime ? '♾️ Lifetime Access' : (dev.expiry?.toDate?.()?.toLocaleString('en-IN') || '—');
+  document.getElementById('d-seen').textContent     = dev.last_seen?.toDate?.()?.toLocaleString('en-IN') || '—';
+  document.getElementById('d-searches').textContent = dev.search_count || 0;
+  document.getElementById('d-ua').textContent       = dev.user_agent || 'Standard client';
+
+  // Load Search History for THIS Device
+  loadDossierHistory(dev.id);
+}
+
+function closeUserDossier() {
+  document.getElementById('user-dossier-modal').style.display = 'none';
+  currentDossierDevice = null;
+}
+
+async function toggleDossierBlock() {
+  if (!currentDossierDevice) return;
+  const newBlockedState = !currentDossierDevice.is_blocked;
+  await db.collection('devices').doc(currentDossierDevice.id).update({ is_blocked: newBlockedState });
+  currentDossierDevice.is_blocked = newBlockedState;
+  toast(newBlockedState ? '🚫 User Block Kar Diya Gaya!' : '✅ User Unblock Ho Gaya!');
+  openUserDossier(currentDossierDevice.id);
+  loadDevices();
+  loadDashboard();
+}
+
+async function extendDossierExpiry(days) {
+  if (!currentDossierDevice) return;
+  const currentExp = currentDossierDevice.expiry?.toDate?.() || new Date();
+  const baseTime = currentExp > new Date() ? currentExp : new Date();
+  const newDate = new Date(baseTime.getTime() + days * 86400000);
+  await db.collection('devices').doc(currentDossierDevice.id).update({
+    expiry: firebase.firestore.Timestamp.fromDate(newDate),
+    is_lifetime: false
+  });
+  currentDossierDevice.expiry = firebase.firestore.Timestamp.fromDate(newDate);
+  currentDossierDevice.is_lifetime = false;
+  toast(`⏳ Expiry extended by +${days} days!`);
+  openUserDossier(currentDossierDevice.id);
+  loadDevices();
+}
+
+async function makeDossierLifetime() {
+  if (!currentDossierDevice) return;
+  await db.collection('devices').doc(currentDossierDevice.id).update({
+    is_lifetime: true
+  });
+  currentDossierDevice.is_lifetime = true;
+  toast('♾️ Lifetime Access Granted!');
+  openUserDossier(currentDossierDevice.id);
+  loadDevices();
+}
+
+async function deleteDossierDevice() {
+  if (!currentDossierDevice) return;
+  const devId = currentDossierDevice.id;
+  closeUserDossier();
+  confirmAction('dev-delete', devId);
+}
+
+async function loadDossierHistory(deviceId) {
+  const tbody = document.getElementById('dossier-history-tbody');
+  tbody.innerHTML = `<tr><td colspan="3"><div class="empty-state"><span class="ei">⏳</span><p>Loading user history...</p></div></td></tr>`;
+  try {
+    const snap = await db.collection('history')
+      .where('device_id', '==', deviceId)
+      .orderBy('timestamp', 'desc')
+      .limit(60)
+      .get();
+    
+    document.getElementById('dossier-hist-count').textContent = snap.size + ' records';
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="3"><div class="empty-state"><span class="ei">📭</span><p>Is user ne abhi koi number lookup nahi kiya.</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = snap.docs.map(doc => {
+      const h = doc.data();
+      const time = h.timestamp?.toDate?.()?.toLocaleString('en-IN') || '—';
+      const isOwnerAtt = Boolean(h.is_owner_attempt);
+      return `<tr ${isOwnerAtt ? 'style="background:rgba(239,68,68,0.1);"' : ''}>
+        <td>
+          <span class="key-txt">+91 ${escH(h.number||'—')}</span>
+          ${isOwnerAtt ? '<span class="badge badge-stalker" style="margin-left:8px;">🚨 OWNER NUMBER</span>' : ''}
+        </td>
+        <td><span class="mono-sm">${time}</span></td>
+        <td>${h.results_found
+            ? `<span class="badge badge-active">✅ ${h.results_count||0} records</span>`
+            : `<span class="badge badge-used">❌ Not found</span>`}
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    console.error(e);
+    tbody.innerHTML = `<tr><td colspan="3"><div class="empty-state" style="color:var(--danger);"><p>Error loading history: ${e.message}</p></div></td></tr>`;
+  }
+}
+
+// ═══ LOAD HISTORY ════════════════════════════════════════════
+let allHistory = [];
+
+async function loadHistory() {
+  try {
+    const snap = await db.collection('history').orderBy('timestamp','desc').limit(300).get();
+    allHistory = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    document.getElementById('history-count-label').textContent = allHistory.length + ' records';
+    renderHistory(allHistory);
+  } catch(e) { console.error(e); }
+}
+
+function renderHistory(history) {
+  const tbody = document.getElementById('history-tbody');
+  if (!history.length) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><span class="ei">📜</span><p>Koi search history nahi hai.</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = history.map(h => {
+    const time = h.timestamp?.toDate?.()?.toLocaleString('en-IN') || '—';
+    const isOwnerAtt = Boolean(h.is_owner_attempt);
+    return `<tr class="tr-clickable ${isOwnerAtt ? 'tr-stalker' : ''}" onclick="openUserDossier('${escH(h.device_id||'')}')">
+      <td>
+        <span class="key-txt">+91 ${escH(h.number||'—')}</span>
+        ${isOwnerAtt ? '<span class="badge badge-stalker" style="margin-left:8px;">🚨 STALKER ATTEMPT</span>' : ''}
+      </td>
+      <td><span class="mono-sm" title="${escH(h.device_id||'')}">
+        ${escH((h.device_id||'unknown').substring(0,22))}…
+      </span></td>
+      <td><span class="mono-sm">${time}</span></td>
+      <td>${h.results_found
+          ? `<span class="badge badge-active">✅ ${h.results_count||0} found</span>`
+          : `<span class="badge badge-used">❌ Not found</span>`}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterHistory() {
+  const q = document.getElementById('hist-search').value.toLowerCase();
+  renderHistory(allHistory.filter(h =>
+    (h.number||'').includes(q) || (h.device_id||'').toLowerCase().includes(q)
+  ));
+}
+
+async function clearAllHistory() {
+  confirmAction('hist-clear-all', null);
+}
+
+// ═══ DASHBOARD ══════════════════════════════════════════════
+async function loadDashboard() {
+  try {
+    const [keysSnap, devicesSnap, histSnap, recentSnap, alertsSnap] = await Promise.all([
+      db.collection('keys').get(),
+      db.collection('devices').get(),
+      db.collection('history').get(),
+      db.collection('history').orderBy('timestamp','desc').limit(6).get(),
+      db.collection('owner_alerts').orderBy('timestamp','desc').limit(20).get()
+    ]);
+
+    const devices       = devicesSnap.docs.map(d => ({id:d.id,...d.data()}));
+    const activeDevs    = devices.filter(d => !d.is_blocked && !isDeviceExpired(d));
+    const blockedThings = devices.filter(d => d.is_blocked).length;
+
+    setText('st-keys',    keysSnap.size);
+    setText('st-devices', activeDevs.length);
+    setText('st-searches',histSnap.size);
+    setText('st-blocked', blockedThings);
+    setText('st-alerts',  alertsSnap.size);
+
+    // Render Owner Stalking Alerts
+    const alertsTbody = document.getElementById('dash-owner-alerts');
+    document.getElementById('alerts-count-label').textContent = alertsSnap.size + ' alerts';
+    if (alertsSnap.empty) {
+      alertsTbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="ei">🛡️</span><p>Koi intrusion attempt nahi hai. Aapka number poori tarah surakshit hai!</p></div></td></tr>`;
+    } else {
+      alertsTbody.innerHTML = alertsSnap.docs.map(doc => {
+        const a = doc.data();
+        const time = a.timestamp?.toDate?.()?.toLocaleString('en-IN') || 'Just now';
+        return `<tr style="background:rgba(239,68,68,0.06);">
+          <td><span class="key-txt" style="color:var(--danger); font-weight:800;">+91 ${escH(a.target_number||'—')}</span></td>
+          <td><span class="mono-sm" title="${escH(a.device_id)}">${escH((a.device_id||'').substring(0,18))}…</span></td>
+          <td><span class="mono-sm" style="color:var(--primary); font-weight:700;">${escH(a.ip||'Recorded')}</span></td>
+          <td><span class="mono-sm">${escH(a.os||'Unknown')} / ${escH(a.browser||'-')}</span></td>
+          <td><span class="mono-sm">${time}</span></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-ghost btn-xs" onclick="openUserDossier('${escH(a.device_id)}')">👁️ Dossier</button>
+              <button class="btn btn-danger btn-xs" onclick="toggleDevice('${escH(a.device_id)}', true)">🚫 Block</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Recent activity
+    const recentData = recentSnap.docs.map(d => ({id:d.id,...d.data()}));
+    const tbody = document.getElementById('dash-recent');
+    if (!recentData.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><span class="ei">📭</span><p>Abhi koi search nahi hua.</p></div></td></tr>`;
+    } else {
+      tbody.innerHTML = recentData.map(h => {
+        const time = h.timestamp?.toDate?.()?.toLocaleString('en-IN') || '—';
+        return `<tr class="tr-clickable" onclick="openUserDossier('${escH(h.device_id||'')}')">
+          <td><span class="key-txt">+91 ${escH(h.number||'—')}</span></td>
+          <td><span class="mono-sm">${escH((h.device_id||'unknown').substring(0,20))}…</span></td>
+          <td><span class="mono-sm">${time}</span></td>
+          <td>${h.results_found ? `<span class="badge badge-active">✅ Found</span>` : `<span class="badge badge-used">❌ None</span>`}</td>
+        </tr>`;
+      }).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+function isDeviceExpired(d) {
+  if (d.is_lifetime) return false;
+  const exp = d.expiry?.toDate?.() || new Date(d.expiry);
+  return exp < new Date();
+}
+
+// ═══ CONFIRM MODAL ══════════════════════════════════════════
+let pendingAction = null;
+let pendingId     = null;
+
+function confirmAction(action, id) {
+  const modal = document.getElementById('confirm-modal');
+  const title = document.getElementById('confirm-title');
+  const msg   = document.getElementById('confirm-msg');
+  const icon  = document.getElementById('confirm-icon');
+
+  pendingAction = action;
+  pendingId     = id;
+
+  if (action === 'key-delete')      { icon.textContent='🗑️'; title.textContent='Key Delete Karo?'; msg.textContent='Yeh key permanently delete ho jayegi. Linked device access kho dega.'; }
+  if (action === 'dev-delete')      { icon.textContent='📱'; title.textContent='Device Delete Karo?'; msg.textContent='Yeh device system se remove ho jayega.'; }
+  if (action === 'dev-delete-all')  { icon.textContent='⚠️'; title.textContent='Saare Devices Delete Karo?'; msg.textContent='Tamam registered devices delete ho jayenge. Yeh action undo nahi hogi!'; }
+  if (action === 'hist-clear-all')  { icon.textContent='📜'; title.textContent='Saari History Delete Karo?'; msg.textContent='Tamam search records permanently delete ho jayenge!'; }
+
+  modal.style.display = 'flex';
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-modal').style.display = 'none';
+  pendingAction = null; pendingId = null;
+}
+
+async function confirmOk() {
+  closeConfirm();
+  if (pendingAction === 'key-delete')     await deleteKeyById(pendingId);
+  if (pendingAction === 'dev-delete')     await deleteDeviceById(pendingId);
+  if (pendingAction === 'dev-delete-all') await _deleteAllDevices();
+  if (pendingAction === 'hist-clear-all') await _clearHistory();
+}
+
+async function _deleteAllDevices() {
+  const snap  = await db.collection('devices').get();
+  const batch = db.batch();
+  snap.docs.forEach(d => batch.delete(d.ref));
+  await batch.commit();
+  toast('🗑️ Saare devices delete ho gaye!');
+  loadDevices(); loadDashboard();
+}
+
+async function _clearHistory() {
+  const snap  = await db.collection('history').get();
+  const batch = db.batch();
+  snap.docs.forEach(d => batch.delete(d.ref));
+  await batch.commit();
+  toast('🗑️ History clear ho gayi!');
+  loadHistory(); loadDashboard();
+}
+
+// ═══ UTILITIES ══════════════════════════════════════════════
+function getBadge(st) {
+  return {
+    active:  '<span class="badge badge-active">✅ Active</span>',
+    used:    '<span class="badge badge-used">🔒 Used</span>',
+    expired: '<span class="badge badge-expired">⏰ Expired</span>',
+    blocked: '<span class="badge badge-blocked">🚫 Blocked</span>',
+  }[st] || st;
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => toast('📋 Copied!')).catch(() => toast('Copy failed', true));
+}
+
+function escH(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function toast(msg, isErr=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = isErr ? 'show-err' : 'show-ok';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className = '', 3200);
+}
+
+// Set min date
+(function() {
+  const d = document.getElementById('custom-date');
+  if (d) d.min = new Date().toISOString().split('T')[0];
+})();
+</script>
+</body>
+</html>
