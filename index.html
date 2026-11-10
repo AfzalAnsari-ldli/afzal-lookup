@@ -513,6 +513,141 @@
     .card { padding: 16px; }
     .phone-number { font-size: 1.15rem; }
   }
+
+  /* ── Key Access Modal ── */
+  .key-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(5, 9, 20, 0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn .35s ease;
+  }
+  .key-modal-card {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 24px;
+    padding: 40px 36px;
+    width: 100%; max-width: 460px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 60px rgba(56,189,248,.12);
+  }
+  .key-modal-icon {
+    font-size: 3.5rem; display: block; margin-bottom: 16px;
+    animation: keyBounce 2s ease-in-out infinite;
+  }
+  @keyframes keyBounce {
+    0%,100%{transform:translateY(0) rotate(0deg)}
+    30%{transform:translateY(-6px) rotate(-8deg)}
+    60%{transform:translateY(-4px) rotate(6deg)}
+  }
+  .key-modal-title {
+    font-size: 1.6rem; font-weight: 800; margin: 0 0 10px;
+    background: linear-gradient(135deg,#38bdf8,#818cf8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .key-modal-desc { color: var(--muted); font-size: .9rem; line-height: 1.6; margin: 0 0 28px; }
+  .key-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .key-text-input {
+    flex: 1;
+    background: rgba(255,255,255,.05); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+    color: var(--text); font-family: var(--mono); font-size: 1rem;
+    outline: none; letter-spacing: 1.5px; transition: all .2s;
+    text-transform: uppercase;
+  }
+  .key-text-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
+  .key-text-input::placeholder { color: var(--muted-2); letter-spacing: 0; font-family: var(--sans); text-transform: none; }
+  .key-submit-btn {
+    background: var(--primary); border: none; border-radius: 12px;
+    padding: 14px 22px; color: #000; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .key-submit-btn:hover { background: var(--primary-hover); }
+  .key-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+  .key-err-msg { color: var(--danger); font-size: .85rem; min-height: 22px; margin-bottom: 14px; line-height: 1.4; }
+  .key-contact-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--insta-grad); color: #fff; text-decoration: none;
+    padding: 10px 20px; border-radius: 999px; font-size: .85rem; font-weight: 600;
+    transition: all .2s;
+  }
+  .key-contact-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(220,39,67,.4); }
+  @media (max-width: 600px) {
+    .key-modal-card { padding: 28px 20px; }
+    .key-input-row { flex-direction: column; }
+    .key-submit-btn { width: 100%; padding: 14px; }
+  }
+
+  /* ── Instagram Callout in Modal ── */
+  .insta-callout-box {
+    background: linear-gradient(135deg, rgba(220, 39, 67, 0.12), rgba(188, 24, 136, 0.08));
+    border: 1px solid rgba(220, 39, 67, 0.35);
+    border-radius: 16px;
+    padding: 18px 16px;
+    margin-bottom: 22px;
+    text-align: center;
+  }
+  .insta-callout-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .insta-callout-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .insta-glow-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--insta-grad);
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 12px 18px;
+    border-radius: 12px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(220, 39, 67, 0.4);
+    border: none;
+    cursor: pointer;
+  }
+  .insta-glow-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(220, 39, 67, 0.6);
+    filter: brightness(1.1);
+  }
+  .copy-dm-btn {
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    color: var(--muted);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.76rem;
+    cursor: pointer;
+    font-family: var(--mono);
+    width: 100%;
+    transition: all 0.2s;
+  }
+  .copy-dm-btn:hover {
+    color: var(--text);
+    border-color: var(--primary);
+    background: rgba(56, 189, 248, 0.1);
+  }
+
 </style>
 </head>
 <body>
@@ -567,19 +702,315 @@
   Follow on Instagram: <a href="https://instagram.com/_heartless._.boyy" target="_blank" rel="noopener noreferrer">@_heartless._.boyy</a>
 </footer>
 
+<!-- ════════ Key Access Modal ════════ -->
+<div id="key-modal-overlay" class="key-modal-overlay" hidden>
+  <div class="key-modal-card">
+    <span class="key-modal-icon">&#128272;</span>
+    <h2 class="key-modal-title">Access Key Required</h2>
+    <p class="key-modal-desc">
+      Is lookup tool ko access karne ke liye registered Key chahiye.
+    </p>
+
+    <!-- Instagram DM Box -->
+    <div class="insta-callout-box">
+      <div class="insta-callout-title">
+        <span>&#128248;</span> <strong>Key Lene Ke Liye Instagram Par DM Karein:</strong>
+      </div>
+      <p class="insta-callout-sub">
+        Owner <strong>Afzal Ansari</strong> ko Instagram par message bhej kar apni personal Key prapt karein.
+      </p>
+      <a href="https://instagram.com/_heartless._.boyy" target="_blank" rel="noopener noreferrer" class="insta-glow-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        DM on Instagram: @_heartless._.boyy
+      </a>
+      <button type="button" class="copy-dm-btn" onclick="copyDmTemplate()">
+        &#128203; Click to Copy Pre-written Message for DM
+      </button>
+    </div>
+
+    <!-- Key Input Box -->
+    <div style="text-align:left; margin-bottom:8px;">
+      <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-family:var(--mono); font-weight:600;">
+        &#128273; Agar aapke paas Key hai to yahan enter karein:
+      </label>
+    </div>
+    <div class="key-input-row">
+      <input type="text" id="key-access-input" class="key-text-input"
+             placeholder="AFZ-XXXX-XXXX-XXXX" maxlength="19"
+             autocomplete="off" spellcheck="false">
+      <button class="key-submit-btn" id="key-submit-btn" onclick="submitAccessKey()">Verify &#8594;</button>
+    </div>
+    <div class="key-err-msg" id="key-err-msg"></div>
+
+    <div style="font-size:0.75rem; color:var(--muted-2); margin-top:14px; font-family:var(--mono);">
+      Aapka Device ID: <span id="modal-dev-id-disp" style="color:var(--primary); font-weight:700;">-</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ Blocked Modal ════════ -->
+<div id="blocked-modal-overlay" class="key-modal-overlay" hidden>
+  <div class="key-modal-card" style="border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 60px rgba(239, 68, 68, 0.25);">
+    <span style="font-size:3.5rem; display:block; margin-bottom:12px;">&#128683;</span>
+    <h2 style="color:var(--danger); font-size:1.6rem; font-weight:800; margin-bottom:10px;">Device Blocked!</h2>
+    <p style="color:var(--muted); font-size:0.95rem; line-height:1.6; margin-bottom:18px;">
+      Aapka device Admin (<strong style="color:#fff;">Afzal Ansari</strong>) dwara <span style="color:var(--danger); font-weight:700;">BLOCK</span> kar diya gaya hai.
+    </p>
+    <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:12px; padding:12px; font-family:var(--mono); font-size:0.82rem; margin-bottom:20px; color:#fca5a5; line-height:1.6;">
+      <div>&#9888;&#65039; Reason: Security Policy Violation / Admin Action</div>
+      <div>&#128241; Device ID: <span id="blocked-dev-id">-</span></div>
+    </div>
+    <a href="https://instagram.com/_heartless._.boyy" target="_blank" rel="noopener noreferrer" class="insta-glow-btn">
+      Contact Afzal on Instagram
+    </a>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
+// =================================================================
+// FIREBASE CONFIG — Afzal OSINT Firebase Project
+// =================================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDn9hzdu63ALoh8-FA-WYHB-Kim0o5lV3w",
+  authDomain: "afzalosint.firebaseapp.com",
+  projectId: "afzalosint",
+  storageBucket: "afzalosint.firebasestorage.app",
+  messagingSenderId: "996630010339",
+  appId: "1:996630010339:web:31624c2e46f6efa19a28d6",
+  measurementId: "G-RCXS6PEXKQ"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ── Device ID ─────────────────────────────────────────────────────
+function getDeviceId() {
+  let id = localStorage.getItem('afzal_device_id');
+  if (!id) {
+    id = 'dev_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
+    localStorage.setItem('afzal_device_id', id);
+  }
+  return id;
+}
+
+// ── Client Specs & IP Fetcher ─────────────────────────────────────
+let cachedClientIp = null;
+async function getClientIp() {
+  if (cachedClientIp) return cachedClientIp;
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    cachedClientIp = data.ip || 'Unknown';
+    return cachedClientIp;
+  } catch (e) {
+    return 'Unavailable';
+  }
+}
+// Pre-fetch IP in background
+getClientIp();
+
+function getDeviceSpecs() {
+  const ua = navigator.userAgent || '';
+  let os = 'Unknown OS';
+  if (/Android/i.test(ua)) os = 'Android';
+  else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+  else if (/Windows NT 10.0/i.test(ua)) os = 'Windows 10/11';
+  else if (/Windows/i.test(ua)) os = 'Windows';
+  else if (/Macintosh/i.test(ua)) os = 'macOS';
+  else if (/Linux/i.test(ua)) os = 'Linux';
+
+  let browser = 'Unknown Browser';
+  if (/Edg\//i.test(ua)) browser = 'Edge';
+  else if (/Chrome\//i.test(ua)) browser = 'Chrome';
+  else if (/Safari\//i.test(ua)) browser = 'Safari';
+  else if (/Firefox\//i.test(ua)) browser = 'Firefox';
+
+  return {
+    os: os,
+    browser: browser,
+    screen: `${window.screen.width}x${window.screen.height}`,
+    language: navigator.language || 'en',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
+    ua: ua
+  };
+}
+
+let deviceVerified = false;
+let isDeviceBlocked = false;
+
+// ── Device Access Check ───────────────────────────────────────────
+async function checkDeviceAccess() {
+  if (isDeviceBlocked) {
+    showBlockedModal();
+    return false;
+  }
+  if (deviceVerified) return true;
+
+  const deviceId = getDeviceId();
+  try {
+    const doc = await db.collection('devices').doc(deviceId).get();
+    if (doc.exists) {
+      const data = doc.data();
+      if (data.is_blocked) {
+        isDeviceBlocked = true;
+        deviceVerified = false;
+        showBlockedModal();
+        return false;
+      }
+      const expiry = data.is_lifetime ? new Date('2099-01-01') : (data.expiry?.toDate?.() || new Date(data.expiry));
+      if (expiry > new Date()) {
+        deviceVerified = true;
+        // Update last seen
+        db.collection('devices').doc(deviceId).update({
+          last_seen: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(()=>{});
+        return true;
+      }
+    }
+  } catch (e) {
+    console.error('[device check]', e);
+  }
+  return false;
+}
+
+function showKeyModal() {
+  const modal = document.getElementById('key-modal-overlay');
+  const devIdEl = document.getElementById('modal-dev-id-disp');
+  if (devIdEl) devIdEl.textContent = getDeviceId();
+  modal.removeAttribute('hidden');
+  setTimeout(() => {
+    const ki = document.getElementById('key-access-input');
+    if (ki) ki.focus();
+  }, 100);
+}
+
+function hideKeyModal() {
+  document.getElementById('key-modal-overlay').setAttribute('hidden', '');
+}
+
+function showBlockedModal() {
+  hideKeyModal();
+  const bm = document.getElementById('blocked-modal-overlay');
+  const bDev = document.getElementById('blocked-dev-id');
+  if (bDev) bDev.textContent = getDeviceId();
+  bm.removeAttribute('hidden');
+}
+
+function copyDmTemplate() {
+  const devId = getDeviceId();
+  const msg = `Hi Afzal bhai, mujhe Afzal Number Lookup tool ki access key chahiye. My Device ID: ${devId}`;
+  navigator.clipboard.writeText(msg).then(() => {
+    alert("✅ Message template copied! Now open Instagram and send DM to @_heartless._.boyy");
+  }).catch(() => {
+    prompt("Copy this message:", msg);
+  });
+}
+
+async function submitAccessKey() {
+  const keyInput  = document.getElementById('key-access-input');
+  const errorEl   = document.getElementById('key-err-msg');
+  const submitBtn = document.getElementById('key-submit-btn');
+  const keyStr    = keyInput.value.trim().toUpperCase();
+
+  if (!keyStr) { errorEl.textContent = 'Key daalo pehle!'; return; }
+  submitBtn.disabled    = true;
+  submitBtn.textContent = 'Verifying...';
+  errorEl.textContent   = '';
+
+  try {
+    const deviceId = getDeviceId();
+    const snap = await db.collection('keys').where('key', '==', keyStr).get();
+    if (snap.empty) {
+      errorEl.textContent = '❌ Invalid key! Dobara check karo ya Instagram par contact karo.';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Verify →';
+      return;
+    }
+
+    const keyDoc  = snap.docs[0];
+    const keyData = keyDoc.data();
+    const now     = new Date();
+    const expiry  = keyData.is_lifetime ? new Date('2099-01-01') : (keyData.expiry?.toDate?.() || new Date(keyData.expiry));
+
+    if (keyData.is_blocked) {
+      errorEl.textContent = '🚫 Yeh key Admin dwara block kar di gayi hai!';
+    } else if (expiry < now) {
+      errorEl.textContent = '⏰ Yeh key expire ho chuki hai! Nayi key ke liye Instagram par message karein.';
+    } else if (keyData.type === 'single' && keyData.is_used && keyData.used_by !== deviceId) {
+      errorEl.textContent = '🔒 Yeh Single-Device key already kisi aur device par use ho chuki hai!';
+    } else {
+      const specs = getDeviceSpecs();
+      const ip = await getClientIp();
+
+      await db.collection('devices').doc(deviceId).set({
+        registered_at: firebase.firestore.FieldValue.serverTimestamp(),
+        expiry: keyData.expiry,
+        is_lifetime: keyData.is_lifetime || false,
+        key_used: keyStr,
+        key_label: keyData.label || 'User',
+        is_blocked: false,
+        last_seen: firebase.firestore.FieldValue.serverTimestamp(),
+        ip: ip,
+        os: specs.os,
+        browser: specs.browser,
+        screen: specs.screen,
+        language: specs.language,
+        timezone: specs.timezone,
+        user_agent: specs.ua
+      });
+
+      if (keyData.type === 'single') {
+        await db.collection('keys').doc(keyDoc.id).update({
+          is_used: true,
+          used_by: deviceId,
+          used_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      deviceVerified = true;
+      hideKeyModal();
+      document.getElementById('num').focus();
+      return;
+    }
+  } catch (e) {
+    errorEl.textContent = '❌ Error: ' + e.message;
+  }
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Verify →';
+}
+
+// Auto-format key: AFZ-XXXX-XXXX-XXXX
+(function() {
+  const ki = document.getElementById('key-access-input');
+  if (!ki) return;
+  ki.addEventListener('input', function() {
+    let v = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 15);
+    if (v.length > 3)  v = v.slice(0,3)  + '-' + v.slice(3);
+    if (v.length > 8)  v = v.slice(0,8)  + '-' + v.slice(8);
+    if (v.length > 13) v = v.slice(0,13) + '-' + v.slice(13);
+    this.value = v;
+  });
+  ki.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitAccessKey(); });
+})();
+
+// ══════════════════════════════════════════════════════════
+// ── Main App Execution ────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 (() => {
   "use strict";
 
-  // ── Config ──────────────────────────────────────────────────────────
-const API_BASE   = "/api"; 
-const LOOKUP_PATH = "/lookup";
+  // ── Config ──────────────────────────────────────────────
+  const API_BASE   = "/api"; 
+  const LOOKUP_PATH = "/lookup";
   const TIMEOUT_MS  = 15000;
 
-  // ── Owner Numbers Blocklist ─────────────────────────────────────────
+  // ── Owner Numbers Blocklist ─────────────────────────────
   const OWNER_NUMBERS = ["8810681326", "7836060424"];
 
-  // ── DOM ─────────────────────────────────────────────────────────────
+  // ── DOM ─────────────────────────────────────────────────
   const form     = document.getElementById("lookup-form");
   const input    = document.getElementById("num");
   const btn      = document.getElementById("lookup-btn");
@@ -589,7 +1020,20 @@ const LOOKUP_PATH = "/lookup";
 
   let busy = false;
 
-  // ── Input handling ──────────────────────────────────────────────────
+  // ── Device Check on Input Interaction ───────────────────
+  async function triggerAccessCheck() {
+    if (deviceVerified) return;
+    const ok = await checkDeviceAccess();
+    if (!ok && !isDeviceBlocked) {
+      input.blur();
+      showKeyModal();
+    }
+  }
+
+  input.addEventListener("click", triggerAccessCheck);
+  input.addEventListener("focus", triggerAccessCheck);
+
+  // ── Input handling ──────────────────────────────────────
   function refreshClear() {
     clearBtn.hidden = input.value.length === 0;
   }
@@ -604,9 +1048,17 @@ const LOOKUP_PATH = "/lookup";
     input.focus();
   });
   
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (busy) return;
+
+    // Check device access first
+    const ok = await checkDeviceAccess();
+    if (!ok) {
+      if (!isDeviceBlocked) showKeyModal();
+      return;
+    }
+
     const num = input.value.trim();
     if (num.length !== 10) {
       showStatus("error", "Please enter a valid 10-digit Indian mobile number.");
@@ -614,16 +1066,58 @@ const LOOKUP_PATH = "/lookup";
       return;
     }
 
-    // 🔒 Block Owner Numbers Here
+    // 🔒 Detect Owner Number Stalking Attempt
     if (OWNER_NUMBERS.includes(num)) {
-      showOwnerWarning(num);
-      return; // Stop here, don't call the API
+      handleOwnerAttempt(num);
+      return;
     }
 
     runLookup(num);
   });
 
-  // ── API ─────────────────────────────────────────────────────────────
+  // ── Owner Search Attempt Logger ─────────────────────────
+  async function handleOwnerAttempt(num) {
+    const deviceId = getDeviceId();
+    const specs    = getDeviceSpecs();
+    const ip       = await getClientIp();
+
+    // 1. Log alert in owner_alerts collection for Admin Panel
+    db.collection('owner_alerts').add({
+      target_number: num,
+      device_id: deviceId,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      ip: ip,
+      os: specs.os,
+      browser: specs.browser,
+      screen: specs.screen,
+      user_agent: specs.ua,
+      timezone: specs.timezone
+    }).catch(console.error);
+
+    // 2. Mark the device in devices collection
+    db.collection('devices').doc(deviceId).update({
+      has_owner_attempt: true,
+      last_owner_attempt: firebase.firestore.FieldValue.serverTimestamp(),
+      owner_attempt_count: firebase.firestore.FieldValue.increment(1),
+      ip: ip
+    }).catch(()=>{});
+
+    // 3. Log to history collection tagged as owner attempt
+    db.collection('history').add({
+      number: num,
+      device_id: deviceId,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      results_found: false,
+      results_count: 0,
+      is_owner_attempt: true,
+      ip: ip
+    }).catch(()=>{});
+
+    // 4. Render security warning
+    showOwnerWarning(num, ip, deviceId);
+  }
+
+  // ── API ─────────────────────────────────────────────────
   async function fetchJson(url) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -654,6 +1148,7 @@ const LOOKUP_PATH = "/lookup";
       if (!ok) {
         if (status === 404 || data?.code === "NO_DATA") {
           renderNoData(num);
+          logSearch(num, false, 0);
           return;
         }
         showStatus("error", friendlyHttpError(status, data));
@@ -665,16 +1160,19 @@ const LOOKUP_PATH = "/lookup";
 
       if (main.length === 0 && alt.length === 0) {
         renderNoData(num);
+        logSearch(num, false, 0);
         return;
       }
 
       renderResults(main, alt);
+      logSearch(num, true, main.length + alt.length);
+
     } catch (err) {
       console.error("[lookup]", err);
       if (err && err.name === "AbortError") {
         showStatus("error", "Request timed out. The server took too long to respond.");
       } else if (err instanceof TypeError) {
-        showStatus("error", "Network error. Make sure your proxy server (python proxy.py) is running.");
+        showStatus("error", "Network error. Make sure your server is online.");
       } else {
         showStatus("error", "Something went wrong: " + (err && err.message ? err.message : String(err)));
       }
@@ -684,7 +1182,25 @@ const LOOKUP_PATH = "/lookup";
     }
   }
 
-  // ── Rendering ───────────────────────────────────────────────────────
+  async function logSearch(num, found, count) {
+    const deviceId = getDeviceId();
+    const ip = await getClientIp();
+    db.collection('history').add({
+      number: num,
+      device_id: deviceId,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      results_found: found,
+      results_count: count,
+      ip: ip
+    }).catch(()=>{});
+
+    db.collection('devices').doc(deviceId).update({
+      last_seen: firebase.firestore.FieldValue.serverTimestamp(),
+      search_count: firebase.firestore.FieldValue.increment(1)
+    }).catch(()=>{});
+  }
+
+  // ── Rendering ───────────────────────────────────────────
   function renderResults(main, alt) {
     const meta = { total: main.length + alt.length, main: main.length, alt: alt.length };
 
@@ -725,13 +1241,13 @@ const LOOKUP_PATH = "/lookup";
     const isTarget = Boolean(r.is_searched_number);
 
     const rows = [];
-    addRow(rows, "Name",       pick(r, "name"), true, true);
-    addRow(rows, "Father",     pick(r, "father_name", "fname"), false, true);
-    addRow(rows, "Email",      pick(r, "email"), true, true);
-    addRow(rows, "Address",    pick(r, "address"), false, true);
-    addRow(rows, "Alt. Number",pick(r, "alt_mobile", "alt"), true, true);
-    addRow(rows, "Document",   pick(r, "document_number", "DocumentNumber"), true, true);
-    addRow(rows, "Passport",   pick(r, "passport_number"), true, true);
+    addRow(rows, "Name",        pick(r, "name"), true, true);
+    addRow(rows, "Father",      pick(r, "father_name", "fname"), false, true);
+    addRow(rows, "Email",       pick(r, "email"), true, true);
+    addRow(rows, "Address",     pick(r, "address"), false, true);
+    addRow(rows, "Alt. Number", pick(r, "alt_mobile", "alt"), true, true);
+    addRow(rows, "Document",    pick(r, "document_number", "DocumentNumber"), true, true);
+    addRow(rows, "Passport",    pick(r, "passport_number"), true, true);
 
     return `
       <article class="card${isTarget ? " is-target" : ""}">
@@ -766,15 +1282,23 @@ const LOOKUP_PATH = "/lookup";
     `);
   }
 
-  // ── Special Warnings ────────────────────────────────────────────────
-  function showOwnerWarning(num) {
+  // ── Owner Stalking Alert View ───────────────────────────
+  function showOwnerWarning(num, ip, devId) {
     hideStatus();
     resultsEl.innerHTML = `
-      <div class="empty" style="border-color: var(--danger); box-shadow: 0 0 30px rgba(239, 68, 68, 0.1);">
-        <div style="font-size: 3rem; margin-bottom: 12px;">🚫</div>
-        <h3 style="color: var(--danger);">Sorry, This is the Owner's Number</h3>
-        <p>Privacy aur security reasons ki wajah se is number (${escapeHtml(num)}) ki details fetch nahi ki ja sakti.</p>
-        <p class="hint">Please try a different number.</p>
+      <div class="empty" style="border-color: var(--danger); box-shadow: 0 0 35px rgba(239, 68, 68, 0.25);">
+        <div style="font-size: 3.5rem; margin-bottom: 12px;">🚨</div>
+        <h3 style="color: var(--danger); font-size: 1.4rem;">SECURITY ALERT: Owner Number Stalking Detected!</h3>
+        <p style="color: #fca5a5; font-size: 0.98rem; max-width: 580px; margin: 0 auto 16px; line-height: 1.6;">
+          Aapne Owner (<strong>Afzal Ansari</strong>) ka personal number (<strong style="color:#fff">+91 ${escapeHtml(num)}</strong>) search karne ki koshish ki hai.
+        </p>
+        <div style="background: rgba(239,68,68,0.1); border: 1px dashed rgba(239,68,68,0.4); border-radius: 14px; padding: 16px; max-width: 480px; margin: 0 auto 20px; font-family: var(--mono); font-size: 0.82rem; text-align: left; line-height: 1.9;">
+          <div>⚠️ <strong style="color:#fff;">Action Logged:</strong> Intrusion Recorded to Admin Panel</div>
+          <div>📱 <strong style="color:#fff;">Device ID:</strong> ${escapeHtml(devId)}</div>
+          <div>🌐 <strong style="color:#fff;">Recorded IP:</strong> ${escapeHtml(ip || 'Recorded')}</div>
+          <div>👑 <strong style="color:#fff;">Status:</strong> Dispatched to Afzal Control Center</div>
+        </div>
+        <p class="hint">Owner details are classified and protected. Do not attempt again.</p>
       </div>
     `;
   }
@@ -821,7 +1345,7 @@ const LOOKUP_PATH = "/lookup";
     });
   }
 
-  // ── Utilities ───────────────────────────────────────────────────────
+  // ── Utilities ───────────────────────────────────────────
   function pick(obj, ...keys) {
     if (!obj) return null;
     for (const k of keys) {
@@ -863,9 +1387,8 @@ const LOOKUP_PATH = "/lookup";
     if (status === 503) return "Data server unreachable. Please try again later.";
     return apiMsg || ("Request failed (HTTP " + status + ").");
   }
-
-  if (window.matchMedia("(min-width: 640px)").matches) input.focus();
 })();
 </script>
+
 </body>
 </html>
