@@ -395,6 +395,10 @@
       <a class="nav-link" onclick="showTab('history',this)">
         <span class="nav-icon">📜</span> History
       </a>
+      <a class="nav-link" onclick="showTab('messages',this)">
+        <span class="nav-icon">💬</span> Messages
+        <span class="badge badge-stalker" id="msg-nav-badge" style="display:none; margin-left:auto; padding:2px 7px; font-size:0.68rem;">0</span>
+      </a>
     </nav>
     <div class="sidebar-footer">
       <div class="admin-badge">Logged in as <strong>Afzal 👑</strong></div>
@@ -446,6 +450,11 @@
           <div class="stat-icon">🚨</div>
           <div class="stat-label" style="color:#fca5a5;">Owner Alerts</div>
           <div class="stat-value" style="color:var(--danger);" id="st-alerts">0</div>
+        </div>
+        <div class="stat-card" style="border-color:rgba(129,140,248,0.4); background:rgba(129,140,248,0.06);">
+          <div class="stat-icon">💬</div>
+          <div class="stat-label" style="color:var(--purple);">User Messages</div>
+          <div class="stat-value" style="color:var(--purple);" id="st-messages">0</div>
         </div>
       </div>
 
@@ -681,6 +690,50 @@
       </div>
     </section>
 
+      <!-- ════════ MESSAGES ════════ -->
+    <section id="tab-messages" class="tab-section">
+      <div class="page-header">
+        <div>
+          <div class="page-title">💬 User <span>Messages</span></div>
+          <div class="page-sub">Website se user dwara bheje gaye messages aur access requests</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="loadMessages()">↻ Refresh</button>
+          <button class="btn btn-danger btn-sm" onclick="confirmAction('msg-clear-all', null)">🗑️ Clear All</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📩 Inbox Messages</div>
+          <span class="mono-sm" id="messages-count-label">0 messages</span>
+        </div>
+        <div class="panel-body">
+          <div class="filter-bar">
+            <input type="text" class="filter-input" placeholder="🔍 Search name, contact, message or device ID..." id="msg-search" oninput="filterMessages()">
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Sender</th>
+                  <th>Contact Info</th>
+                  <th>Message</th>
+                  <th>Device ID</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="messages-tbody">
+                <tr><td colspan="7"><div class="empty-state"><span class="ei">⏳</span><p>Loading messages...</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -890,9 +943,10 @@ function showTab(tab, el) {
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
   if (el) el.classList.add('active');
-  if (tab === 'keys')    loadKeys();
-  if (tab === 'devices') loadDevices();
-  if (tab === 'history') loadHistory();
+  if (tab === 'keys')     loadKeys();
+  if (tab === 'devices')  loadDevices();
+  if (tab === 'history')  loadHistory();
+  if (tab === 'messages') loadMessages();
 }
 
 function loadAll() {
@@ -900,6 +954,7 @@ function loadAll() {
   loadKeys();
   loadDevices();
   loadHistory();
+  loadMessages();
 }
 
 // ═══ KEY GENERATION ═════════════════════════════════════════
@@ -1103,9 +1158,17 @@ function filterDevices() {
 }
 
 async function toggleDevice(id, block) {
-  await db.collection('devices').doc(id).update({is_blocked: block});
-  toast(block ? '🚫 Device block kar diya gaya!' : '✅ Device unblock ho gaya!');
-  loadDevices(); loadDashboard();
+  try {
+    await db.collection('devices').doc(id).set({
+      is_blocked: block,
+      blocked_at: block ? firebase.firestore.FieldValue.serverTimestamp() : null
+    }, { merge: true });
+    toast(block ? '🚫 Device Blocked Successfully!' : '✅ Device Unblocked Successfully!');
+    loadDevices();
+    loadDashboard();
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
 }
 
 async function deleteDeviceById(id) {
@@ -1192,13 +1255,21 @@ function closeUserDossier() {
 
 async function toggleDossierBlock() {
   if (!currentDossierDevice) return;
+  const devId = currentDossierDevice.id;
   const newBlockedState = !currentDossierDevice.is_blocked;
-  await db.collection('devices').doc(currentDossierDevice.id).update({ is_blocked: newBlockedState });
-  currentDossierDevice.is_blocked = newBlockedState;
-  toast(newBlockedState ? '🚫 User Block Kar Diya Gaya!' : '✅ User Unblock Ho Gaya!');
-  openUserDossier(currentDossierDevice.id);
-  loadDevices();
-  loadDashboard();
+  try {
+    await db.collection('devices').doc(devId).set({
+      is_blocked: newBlockedState,
+      blocked_at: newBlockedState ? firebase.firestore.FieldValue.serverTimestamp() : null
+    }, { merge: true });
+    currentDossierDevice.is_blocked = newBlockedState;
+    toast(newBlockedState ? '🚫 User Blocked Live!' : '✅ User Unblocked Live!');
+    openUserDossier(devId);
+    loadDevices();
+    loadDashboard();
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
 }
 
 async function extendDossierExpiry(days) {
@@ -1324,12 +1395,13 @@ async function clearAllHistory() {
 // ═══ DASHBOARD ══════════════════════════════════════════════
 async function loadDashboard() {
   try {
-    const [keysSnap, devicesSnap, histSnap, recentSnap, alertsSnap] = await Promise.all([
+    const [keysSnap, devicesSnap, histSnap, recentSnap, alertsSnap, msgsSnap] = await Promise.all([
       db.collection('keys').get(),
       db.collection('devices').get(),
       db.collection('history').get(),
       db.collection('history').orderBy('timestamp','desc').limit(6).get(),
-      db.collection('owner_alerts').orderBy('timestamp','desc').limit(20).get()
+      db.collection('owner_alerts').orderBy('timestamp','desc').limit(20).get(),
+      db.collection('messages').get()
     ]);
 
     const devices       = devicesSnap.docs.map(d => ({id:d.id,...d.data()}));
@@ -1341,6 +1413,7 @@ async function loadDashboard() {
     setText('st-searches',histSnap.size);
     setText('st-blocked', blockedThings);
     setText('st-alerts',  alertsSnap.size);
+    setText('st-messages', msgsSnap.size);
 
     // Render Owner Stalking Alerts
     const alertsTbody = document.getElementById('dash-owner-alerts');
@@ -1396,6 +1469,122 @@ function isDeviceExpired(d) {
 let pendingAction = null;
 let pendingId     = null;
 
+
+// ════════════════════════════════════════════════════════════
+// 💬 MESSAGES MANAGER (DIRECT MESSAGES FROM USERS)
+// ════════════════════════════════════════════════════════════
+let allMessages = [];
+
+async function loadMessages() {
+  try {
+    const snap = await db.collection('messages').orderBy('timestamp','desc').limit(100).get();
+    allMessages = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    
+    const countEl = document.getElementById('messages-count-label');
+    if (countEl) countEl.textContent = allMessages.length + ' messages';
+
+    const unreadCount = allMessages.filter(m => !m.is_read).length;
+    const navBadge = document.getElementById('msg-nav-badge');
+    if (navBadge) {
+      if (unreadCount > 0) {
+        navBadge.style.display = 'inline-flex';
+        navBadge.textContent = unreadCount;
+      } else {
+        navBadge.style.display = 'none';
+      }
+    }
+
+    renderMessages(allMessages);
+  } catch(e) {
+    console.error('Error loading messages:', e);
+  }
+}
+
+function renderMessages(messages) {
+  const tbody = document.getElementById('messages-tbody');
+  if (!tbody) return;
+  if (!messages.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="ei">📭</span><p>Abhi tak koi message nahi aaya hai.</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = messages.map(m => {
+    const time = m.timestamp?.toDate?.()?.toLocaleString('en-IN') || 'Just now';
+    const isUnread = !m.is_read;
+    const contactStr = m.contact || 'None';
+    const isPhone = /^\+?\d{10,13}$/.test(contactStr.replace(/[\s-]/g, ''));
+    const isInsta = contactStr.startsWith('@') || contactStr.includes('instagram.com');
+
+    return `<tr style="${isUnread ? 'background:rgba(129,140,248,0.08); font-weight:600;' : ''}">
+      <td>
+        <div style="color:#fff; font-weight:700;">${escH(m.name || 'Anonymous')}</div>
+        <span class="mono-sm" style="color:var(--muted); font-size:0.75rem;">${escH(m.ip || 'No IP')}</span>
+      </td>
+      <td>
+        <span class="key-txt" style="font-size:0.85rem; color:var(--primary);">${escH(contactStr)}</span>
+        <div style="margin-top:4px; display:flex; gap:4px;">
+          ${isPhone ? `<a href="https://wa.me/91${contactStr.replace(/\D/g,'')}" target="_blank" class="btn btn-ghost btn-xs" style="color:var(--success);">💬 WhatsApp</a>` : ''}
+          ${isInsta ? `<a href="https://instagram.com/${contactStr.replace('@','')}" target="_blank" class="btn btn-ghost btn-xs" style="color:#f472b6;">📸 Insta</a>` : ''}
+        </div>
+      </td>
+      <td style="max-width:280px; word-break:break-word;">
+        <div style="color:#f8fafc; font-size:0.92rem; line-height:1.5;">${escH(m.message || '—')}</div>
+      </td>
+      <td>
+        <span class="mono-sm" title="${escH(m.device_id||'')}" style="cursor:pointer;" onclick="openUserDossier('${escH(m.device_id||'')}')">
+          ${escH((m.device_id||'unknown').substring(0,18))}…
+        </span>
+      </td>
+      <td><span class="mono-sm">${time}</span></td>
+      <td>
+        ${isUnread 
+          ? `<span class="badge" style="background:rgba(129,140,248,0.2); color:var(--purple); border:1px solid rgba(129,140,248,0.4);">NEW</span>`
+          : `<span class="badge badge-used">Read</span>`}
+      </td>
+      <td>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-ghost btn-xs" onclick="openUserDossier('${escH(m.device_id||'')}')">👁️ Dossier</button>
+          ${isUnread ? `<button class="btn btn-success btn-xs" onclick="markMsgRead('${m.id}')">✓ Mark Read</button>` : ''}
+          <button class="btn btn-danger btn-xs" onclick="deleteMessage('${m.id}')">🗑️ Del</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterMessages() {
+  const q = document.getElementById('msg-search').value.toLowerCase();
+  renderMessages(allMessages.filter(m =>
+    (m.name||'').toLowerCase().includes(q) ||
+    (m.contact||'').toLowerCase().includes(q) ||
+    (m.message||'').toLowerCase().includes(q) ||
+    (m.device_id||'').toLowerCase().includes(q)
+  ));
+}
+
+async function markMsgRead(id) {
+  await db.collection('messages').doc(id).update({ is_read: true });
+  toast('Marked as read');
+  loadMessages();
+}
+
+async function deleteMessage(id) {
+  await db.collection('messages').doc(id).delete();
+  toast('Message deleted');
+  loadMessages();
+  loadDashboard();
+}
+
+async function _clearAllMessages() {
+  const snap = await db.collection('messages').get();
+  const batch = db.batch();
+  snap.docs.forEach(d => batch.delete(d.ref));
+  await batch.commit();
+  toast('All messages cleared');
+  loadMessages();
+  loadDashboard();
+}
+
 function confirmAction(action, id) {
   const modal = document.getElementById('confirm-modal');
   const title = document.getElementById('confirm-title');
@@ -1424,6 +1613,7 @@ async function confirmOk() {
   if (pendingAction === 'dev-delete')     await deleteDeviceById(pendingId);
   if (pendingAction === 'dev-delete-all') await _deleteAllDevices();
   if (pendingAction === 'hist-clear-all') await _clearHistory();
+  if (pendingAction === 'msg-clear-all')  await _clearAllMessages();
 }
 
 async function _deleteAllDevices() {
