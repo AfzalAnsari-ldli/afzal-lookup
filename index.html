@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Afzal Number Lookup</title>
+<title>Afzal Number Lookup — Advanced Telecom Intelligence</title>
 <meta name="description" content="Premium Indian phone number lookup tool by Afzal Ansari. Enter a 10-digit Indian number to fetch caller details." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #050914;
-    --surface: rgba(15, 23, 42, 0.65);
-    --surface-hover: rgba(30, 41, 59, 0.8);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-focus: rgba(56, 189, 248, 0.5);
+    --bg: #030712;
+    --surface: rgba(15, 23, 42, 0.7);
+    --surface-hover: rgba(30, 41, 59, 0.85);
+    --border: rgba(255, 255, 255, 0.09);
+    --border-focus: rgba(56, 189, 248, 0.55);
     --text: #f8fafc;
     --muted: #94a3b8;
     --muted-2: #64748b;
@@ -24,38 +24,39 @@
     --success: #22c55e;
     --warn: #f59e0b;
     --danger: #ef4444;
+    --purple: #818cf8;
     --mono: 'JetBrains Mono', monospace;
     --sans: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; }
   
   body {
     background-color: var(--bg);
     background-image: 
-      radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08), transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(188, 24, 136, 0.05), transparent 25%);
+      radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.12), transparent 28%),
+      radial-gradient(circle at 90% 20%, rgba(188, 24, 136, 0.08), transparent 30%),
+      radial-gradient(circle at 50% 80%, rgba(129, 140, 248, 0.07), transparent 40%);
     color: var(--text);
     font-family: var(--sans);
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Glassmorphism Header */
+  /* ── Header ── */
   .site-header {
     border-bottom: 1px solid var(--border);
-    background: rgba(5, 9, 20, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     position: sticky;
     top: 0;
     z-index: 50;
   }
   .wrap {
-    max-width: 900px;
+    max-width: 940px;
     margin: 0 auto;
     padding: 16px 20px;
     width: 100%;
@@ -64,24 +65,62 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
   }
   .brand {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 800;
+    font-size: 1.15rem;
     letter-spacing: .2px;
     color: var(--text);
     text-decoration: none;
   }
-  .brand .dot {
-    width: 10px; height: 10px; border-radius: 50%;
+  .brand-radar {
+    width: 12px; height: 12px; border-radius: 50%;
     background: var(--primary);
-    box-shadow: 0 0 12px var(--primary);
+    box-shadow: 0 0 14px var(--primary);
+    position: relative;
   }
-  
-  /* Colorful Instagram Button (Always) */
+  .brand-radar::after {
+    content: '';
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    animation: radarPulse 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+  @keyframes radarPulse {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .live-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-family: var(--mono);
+    color: var(--success);
+    font-weight: 600;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: liveBlink 1.5s infinite;
+  }
+  @keyframes liveBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
   .insta-btn {
     display: inline-flex;
     align-items: center;
@@ -102,34 +141,48 @@
     box-shadow: 0 6px 20px rgba(220, 39, 67, 0.5);
     filter: brightness(1.1);
   }
-  .insta-btn svg { width: 16px; height: 16px; }
 
-  main.wrap { flex: 1; padding-top: 48px; padding-bottom: 48px; }
+  main.wrap { flex: 1; padding-top: 40px; padding-bottom: 48px; }
 
-  /* Hero Section */
+  /* ── Hero ── */
   .hero { text-align: center; padding: 10px 0 0; }
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    color: var(--primary);
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
   .hero h1 {
-    font-size: clamp(1.8rem, 5vw, 2.6rem);
-    margin: 0 0 16px;
+    font-size: clamp(2rem, 5.5vw, 2.8rem);
+    margin: 0 0 14px;
     line-height: 1.2;
-    letter-spacing: -0.5px;
-    font-weight: 800;
+    letter-spacing: -0.8px;
+    font-weight: 900;
   }
   .hero h1 .accent {
-    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #ec4899 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .hero p {
     color: var(--muted);
-    max-width: 580px;
+    max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
-    font-size: 1rem;
+    font-size: 1.02rem;
   }
 
-  /* Modern Search Box */
+  /* ── Modern Search Box ── */
   .search-container {
     max-width: 680px;
     margin: 32px auto 0;
@@ -139,27 +192,29 @@
     display: flex;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 8px;
     align-items: stretch;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(14px);
   }
   .search-form:focus-within {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18), 0 12px 40px rgba(0, 0, 0, 0.45);
     transform: translateY(-2px);
   }
   .prefix {
-    display: flex; align-items: center; gap: 6px;
-    padding: 0 16px;
-    color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 18px;
+    color: var(--text);
     font-family: var(--mono);
-    font-size: 1rem;
+    font-size: 1.05rem;
+    font-weight: 700;
     border-right: 1px solid var(--border);
     white-space: nowrap;
   }
+  .prefix-flag { font-size: 1.3rem; }
   .input-wrap {
     flex: 1;
     position: relative;
@@ -175,24 +230,26 @@
     outline: none;
     color: var(--text);
     font-family: var(--mono);
-    font-size: 1.15rem;
-    padding: 14px 40px 14px 16px;
+    font-size: 1.25rem;
+    padding: 14px 40px 14px 18px;
     min-width: 0;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    font-weight: 600;
   }
   .input-wrap input::placeholder {
     color: var(--muted-2);
     letter-spacing: 0;
     font-family: var(--sans);
     font-weight: 400;
+    font-size: 1.05rem;
   }
   .clear-btn {
     position: absolute;
-    right: 10px;
+    right: 12px;
     background: rgba(255, 255, 255, 0.1);
     border: 0;
     color: var(--muted);
-    width: 24px; height: 24px;
+    width: 26px; height: 26px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 14px;
@@ -204,11 +261,11 @@
   .clear-btn:hover { background: rgba(255, 255, 255, 0.2); color: var(--text); }
   .search-form > button[type="submit"] {
     border: 0;
-    border-radius: 12px;
-    padding: 0 28px;
-    background: var(--primary);
+    border-radius: 14px;
+    padding: 0 30px;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
     color: #000;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 1rem;
     font-family: var(--sans);
     cursor: pointer;
@@ -218,37 +275,85 @@
     align-items: center;
     gap: 8px;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
   }
   .search-form > button[type="submit"]:hover:not(:disabled) { 
-    background: var(--primary-hover); 
-    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+    background: linear-gradient(135deg, #7dd3fc, #38bdf8); 
+    box-shadow: 0 6px 24px rgba(56, 189, 248, 0.55);
     transform: translateY(-1px);
   }
-  .search-form > button[type="submit"]:active:not(:disabled) { transform: scale(0.97); }
   .search-form > button[type="submit"]:disabled { opacity: .6; cursor: not-allowed; box-shadow: none; }
 
-  /* Contact Support Banner */
-  .support-banner {
-    text-align: center;
-    margin-top: 16px;
-    font-size: 0.9rem;
-    color: var(--muted);
-    animation: fadeIn 1s ease;
-  }
-  .support-banner a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-    border-bottom: 1px dashed var(--primary);
-    transition: all 0.2s;
-  }
-  .support-banner a:hover {
-    color: var(--primary-hover);
-    border-bottom-style: solid;
+  /* ── Security Trust Subtitle ── */
+  .security-sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 0.78rem;
+    color: var(--muted-2);
+    font-family: var(--mono);
   }
 
-  /* Loading Spinner */
+  /* ── Feature Highlights ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    max-width: 820px;
+    margin: 36px auto 0;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all 0.3s;
+  }
+  .feature-card:hover {
+    border-color: rgba(56, 189, 248, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+  .feature-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .feature-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    color: #fff;
+  }
+  .feature-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── Status Alert ── */
+  .status {
+    max-width: 680px;
+    margin: 16px auto 0;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: .95rem;
+    display: none;
+    border: 1px solid;
+    line-height: 1.5;
+    backdrop-filter: blur(10px);
+  }
+  .status.show { display: block; animation: fadeIn 0.3s ease; }
+  .status.error {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fecaca;
+  }
   .spinner {
     width: 16px; height: 16px;
     border: 2px solid rgba(0, 0, 0, 0.2);
@@ -260,28 +365,8 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Status Alert */
-  .status {
-    max-width: 680px;
-    margin: 16px auto 0;
-    padding: 14px 18px;
-    border-radius: 12px;
-    font-size: .95rem;
-    display: none;
-    border: 1px solid;
-    line-height: 1.5;
-    backdrop-filter: blur(10px);
-  }
-  .status.show { display: block; animation: fadeIn 0.3s ease; }
-  .status.error {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.3);
-    color: #fecaca;
-  }
-
-  /* Results Section */
-  .results { margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto; }
-
+  /* ── Results Section ── */
+  .results { margin-top: 36px; max-width: 820px; margin-left: auto; margin-right: auto; }
   .meta-bar {
     display: flex;
     gap: 12px;
@@ -337,21 +422,21 @@
     font-weight: 600;
   }
 
-  /* Dossier Cards */
+  /* ── Dossier Cards ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 18px;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
   }
   .card:hover {
     background: var(--surface-hover);
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.16);
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   }
   .card.is-target {
     border-color: rgba(56, 189, 248, 0.5);
@@ -368,8 +453,8 @@
   }
   .phone-number {
     font-family: var(--mono);
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1.35rem;
+    font-weight: 800;
     letter-spacing: .5px;
     display: flex;
     align-items: center;
@@ -383,15 +468,15 @@
     font-size: .75rem;
     color: var(--primary);
     background: rgba(56, 189, 248, 0.1);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    border: 1px solid rgba(56, 189, 248, 0.25);
     padding: 3px 10px;
     border-radius: 8px;
     margin-top: 8px;
-    font-weight: 600;
+    font-weight: 700;
   }
   .target-badge {
     font-size: .75rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--success);
     background: rgba(34, 197, 94, 0.15);
     border: 1px solid rgba(34, 197, 94, 0.3);
@@ -400,10 +485,9 @@
     white-space: nowrap;
     letter-spacing: .5px;
   }
-
   .row {
     display: grid;
-    grid-template-columns: 130px 1fr auto;
+    grid-template-columns: 140px 1fr auto;
     gap: 16px;
     padding: 12px 0;
     align-items: baseline;
@@ -426,7 +510,6 @@
   }
   .row .value.mono { font-family: var(--mono); font-size: .95rem; letter-spacing: .5px; }
   .row .value.muted { color: var(--muted-2); font-style: italic; }
-
   .copy-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
@@ -443,11 +526,10 @@
   .copy-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(56, 189, 248, 0.1); }
   .copy-btn.copied { color: var(--success); border-color: var(--success); background: rgba(34, 197, 94, 0.1); }
 
-  /* Empty State */
   .empty {
     background: var(--surface);
     border: 1px dashed var(--border-focus);
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 40px 24px;
     text-align: center;
     backdrop-filter: blur(10px);
@@ -455,69 +537,153 @@
   .empty h3 { margin: 0 0 12px; color: var(--warn); font-size: 1.3rem; }
   .empty p { color: var(--muted); margin: 0 0 12px; line-height: 1.6; font-size: 1rem; }
   .empty .hint { font-family: var(--mono); font-size: .85rem; color: var(--muted-2); }
-  .empty .contact-link {
+  .contact-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 10px 22px;
     background: var(--insta-grad);
     color: #fff;
     text-decoration: none;
     border-radius: 999px;
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 700;
+    font-size: 0.92rem;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-  .empty .contact-link:hover {
+  .contact-link:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(220, 39, 67, 0.4);
+    box-shadow: 0 8px 24px rgba(220, 39, 67, 0.45);
   }
 
-  /* Footer */
-  footer {
-    padding: 32px 20px;
-    text-align: center;
+  /* ── Direct Message Box to Afzal (NEW) ── */
+  .message-section {
+    max-width: 820px;
+    margin: 48px auto 0;
+  }
+  .msg-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.7));
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 20px;
+    padding: 28px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
+  }
+  .msg-card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .msg-icon-badge {
+    font-size: 2rem;
+    line-height: 1;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 12px;
+    border-radius: 16px;
+  }
+  .msg-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 6px;
+  }
+  .msg-sub {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .msg-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .msg-input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .msg-label {
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .msg-input, .msg-textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .msg-input:focus, .msg-textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .msg-input::placeholder, .msg-textarea::placeholder {
     color: var(--muted-2);
-    font-size: .85rem;
-    border-top: 1px solid var(--border);
-    line-height: 1.8;
-    background: rgba(5, 9, 20, 0.8);
   }
-  footer strong { color: var(--text); }
-  footer a { 
-    color: var(--primary); 
-    text-decoration: none; 
-    font-weight: 600;
-    transition: color 0.2s;
+  .msg-textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
   }
-  footer a:hover { color: var(--primary-hover); text-decoration: underline; }
+  .msg-actions {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .msg-send-btn {
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    border: 0;
+    color: #000;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: var(--sans);
+    box-shadow: 0 4px 18px rgba(56, 189, 248, 0.35);
+  }
+  .msg-send-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(56, 189, 248, 0.55);
+    filter: brightness(1.1);
+  }
+  .msg-send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .msg-status {
+    font-size: 0.88rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+  }
+  .msg-status.success {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+  .msg-status.error {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
 
-  @media (max-width: 600px) {
-    .header-content { flex-direction: column; gap: 12px; }
-    .search-form { flex-wrap: wrap; }
-    .search-form > button[type="submit"] {
-      flex-basis: 100%;
-      padding: 14px;
-      margin-top: 8px;
-    }
-    .row {
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-      gap: 6px 12px;
-      padding: 14px 0;
-    }
-    .row .label { grid-column: 1; grid-row: 1; font-size: .75rem; }
-    .row .value { grid-column: 1; grid-row: 2; }
-    .row .copy-btn { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
-    .card { padding: 16px; }
-    .phone-number { font-size: 1.15rem; }
-  }
-
-  /* ── Key Access Modal ── */
+  /* ── Key Access Modal & Blocked Modal ── */
   .key-modal-overlay {
     position: fixed; inset: 0;
-    background: rgba(5, 9, 20, 0.97);
+    background: rgba(3, 7, 18, 0.96);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     z-index: 9999;
@@ -535,69 +701,30 @@
     background: rgba(15, 23, 42, 0.95);
     border: 1px solid rgba(56, 189, 248, 0.4);
     border-radius: 24px;
-    padding: 40px 36px;
-    width: 100%; max-width: 460px;
+    padding: 38px 34px;
+    width: 100%; max-width: 480px;
     text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,.7), 0 0 60px rgba(56,189,248,.12);
   }
   .key-modal-icon {
-    font-size: 3.5rem; display: block; margin-bottom: 16px;
-    animation: keyBounce 2s ease-in-out infinite;
-  }
-  @keyframes keyBounce {
-    0%,100%{transform:translateY(0) rotate(0deg)}
-    30%{transform:translateY(-6px) rotate(-8deg)}
-    60%{transform:translateY(-4px) rotate(6deg)}
+    font-size: 3.5rem; display: block; margin-bottom: 14px;
   }
   .key-modal-title {
     font-size: 1.6rem; font-weight: 800; margin: 0 0 10px;
     background: linear-gradient(135deg,#38bdf8,#818cf8);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .key-modal-desc { color: var(--muted); font-size: .9rem; line-height: 1.6; margin: 0 0 28px; }
-  .key-input-row { display: flex; gap: 8px; margin-bottom: 10px; }
-  .key-text-input {
-    flex: 1;
-    background: rgba(255,255,255,.05); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px;
-    color: var(--text); font-family: var(--mono); font-size: 1rem;
-    outline: none; letter-spacing: 1.5px; transition: all .2s;
-    text-transform: uppercase;
-  }
-  .key-text-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
-  .key-text-input::placeholder { color: var(--muted-2); letter-spacing: 0; font-family: var(--sans); text-transform: none; }
-  .key-submit-btn {
-    background: var(--primary); border: none; border-radius: 12px;
-    padding: 14px 22px; color: #000; font-weight: 700; font-size: 1rem;
-    cursor: pointer; transition: all .2s; white-space: nowrap;
-  }
-  .key-submit-btn:hover { background: var(--primary-hover); }
-  .key-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
-  .key-err-msg { color: var(--danger); font-size: .85rem; min-height: 22px; margin-bottom: 14px; line-height: 1.4; }
-  .key-contact-link {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: var(--insta-grad); color: #fff; text-decoration: none;
-    padding: 10px 20px; border-radius: 999px; font-size: .85rem; font-weight: 600;
-    transition: all .2s;
-  }
-  .key-contact-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(220,39,67,.4); }
-  @media (max-width: 600px) {
-    .key-modal-card { padding: 28px 20px; }
-    .key-input-row { flex-direction: column; }
-    .key-submit-btn { width: 100%; padding: 14px; }
-  }
-
-  /* ── Instagram Callout in Modal ── */
+  .key-modal-desc { color: var(--muted); font-size: .9rem; line-height: 1.6; margin: 0 0 20px; }
   .insta-callout-box {
     background: linear-gradient(135deg, rgba(220, 39, 67, 0.12), rgba(188, 24, 136, 0.08));
     border: 1px solid rgba(220, 39, 67, 0.35);
     border-radius: 16px;
-    padding: 18px 16px;
-    margin-bottom: 22px;
+    padding: 16px;
+    margin-bottom: 20px;
     text-align: center;
   }
   .insta-callout-title {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 6px;
@@ -607,10 +734,10 @@
     gap: 6px;
   }
   .insta-callout-sub {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--muted);
     line-height: 1.5;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .insta-glow-btn {
     display: inline-flex;
@@ -622,7 +749,7 @@
     color: #fff !important;
     text-decoration: none;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     padding: 12px 18px;
     border-radius: 12px;
     transition: all 0.3s;
@@ -653,7 +780,50 @@
     border-color: var(--primary);
     background: rgba(56, 189, 248, 0.1);
   }
+  .key-input-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .key-text-input {
+    flex: 1;
+    background: rgba(255,255,255,.05); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+    color: var(--text); font-family: var(--mono); font-size: 1rem;
+    outline: none; letter-spacing: 1.5px; transition: all .2s;
+    text-transform: uppercase;
+  }
+  .key-text-input:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
+  .key-text-input::placeholder { color: var(--muted-2); letter-spacing: 0; font-family: var(--sans); text-transform: none; }
+  .key-submit-btn {
+    background: var(--primary); border: none; border-radius: 12px;
+    padding: 14px 22px; color: #000; font-weight: 800; font-size: 1rem;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .key-submit-btn:hover { background: var(--primary-hover); }
+  .key-submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+  .key-err-msg { color: var(--danger); font-size: .85rem; min-height: 22px; margin-bottom: 12px; line-height: 1.4; }
 
+  /* ── Footer ── */
+  footer {
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--muted-2);
+    font-size: .88rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.9;
+    background: rgba(3, 7, 18, 0.9);
+  }
+  footer strong { color: var(--text); }
+  footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
+  footer a:hover { color: var(--primary-hover); text-decoration: underline; }
+
+  @media (max-width: 680px) {
+    .header-content { flex-direction: column; gap: 10px; }
+    .msg-form-row { grid-template-columns: 1fr; }
+    .search-form { flex-wrap: wrap; }
+    .search-form > button[type="submit"] { flex-basis: 100%; padding: 14px; margin-top: 8px; }
+    .row { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 6px 12px; padding: 14px 0; }
+    .row .label { grid-column: 1; grid-row: 1; font-size: .75rem; }
+    .row .value { grid-column: 1; grid-row: 2; }
+    .row .copy-btn { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  }
 </style>
 </head>
 <body>
@@ -662,45 +832,114 @@
   <div class="wrap">
     <div class="header-content">
       <a href="#" class="brand">
-        <span class="dot" aria-hidden="true"></span>
+        <span class="brand-radar" aria-hidden="true"></span>
         <span>Afzal Number Lookup</span>
       </a>
-      <a href="https://instagram.com/_heartless._.boyy" target="_blank" rel="noopener noreferrer" class="insta-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-        @_heartless._.boyy
-      </a>
+      <div class="header-right">
+        <div class="live-status-pill">
+          <span class="live-dot"></span>
+          <span>SYSTEM ACTIVE</span>
+        </div>
+        <a href="https://instagram.com/_heartless._.boyy" target="_blank" rel="noopener noreferrer" class="insta-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          @_heartless._.boyy
+        </a>
+      </div>
     </div>
   </div>
 </header>
 
 <main class="wrap">
   <section class="hero">
+    <div class="hero-pill">⚡ ADVANCED TELECOM INTELLIGENCE v2.5</div>
     <h1>Find Caller <span class="accent">Details Instantly</span></h1>
-    <p>Enter any 10-digit Indian mobile number to fetch name, address, and carrier information directly from our database.</p>
+    <p>Enter any 10-digit Indian mobile number to fetch registered name, address, and carrier details directly from intelligence databases.</p>
   </section>
 
   <div class="search-container">
     <form id="lookup-form" class="search-form" autocomplete="off">
       <div class="prefix" title="India">
-        <span aria-hidden="true">🇮🇳</span>
+        <span class="prefix-flag" aria-hidden="true">🇮🇳</span>
         <span>+91</span>
       </div>
       <div class="input-wrap">
         <input id="num" type="tel" inputmode="numeric" maxlength="10"
-               placeholder="Enter mobile number"
+               placeholder="Enter 10-digit number"
                aria-label="10-digit Indian phone number" />
         <button type="button" id="clear-btn" class="clear-btn" hidden aria-label="Clear">×</button>
       </div>
       <button type="submit" id="lookup-btn">Search Now</button>
     </form>
     
-    <div class="support-banner">
-      Number details not showing? <a href="https://instagram.com/_heartless._.boyy" target="_blank" rel="noopener noreferrer">Contact Afzal Ansari</a> for support.
+    <div class="security-sub">
+      <span>🛡️ End-to-End Encrypted Telecom Intelligence</span>
+      <span>•</span>
+      <span>👑 Handled by Afzal Admin</span>
     </div>
   </div>
 
   <div id="status" class="status" role="alert"></div>
   <div id="results" class="results"></div>
+
+  <!-- Feature Highlights -->
+  <section class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div>
+        <div class="feature-title">Instant Carrier Match</div>
+        <div class="feature-desc">Real-time matching across Jio, Airtel, Vi, and BSNL databases.</div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <div>
+        <div class="feature-title">Admin Verified Access</div>
+        <div class="feature-desc">Device authentication required with custom validity keys.</div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <div>
+        <div class="feature-title">Owner Protection Shield</div>
+        <div class="feature-desc">Anti-stalking guard records unauthorized access attempts.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Contact / Send Message to Afzal ══ -->
+  <section class="message-section" id="message-section">
+    <div class="msg-card">
+      <div class="msg-card-head">
+        <div class="msg-icon-badge">💬</div>
+        <div>
+          <h3 class="msg-title">Send a Direct Message to Afzal Ansari</h3>
+          <p class="msg-sub">Access Key chahiye, koi issue report karna hai, ya baat karni ho — apna sandesh yahan bhejein, ye direct Admin Panel par aayega.</p>
+        </div>
+      </div>
+      <form id="contact-form" autocomplete="off">
+        <div class="msg-form-row">
+          <div class="msg-input-wrap">
+            <label for="msg-name" class="msg-label">Aapka Naam / Full Name *</label>
+            <input type="text" id="msg-name" class="msg-input" placeholder="e.g. Rahul Sharma" required />
+          </div>
+          <div class="msg-input-wrap">
+            <label for="msg-contact" class="msg-label">Mobile Number ya Instagram ID *</label>
+            <input type="text" id="msg-contact" class="msg-input" placeholder="e.g. 9876543210 ya @_username" required />
+          </div>
+        </div>
+        <div class="msg-input-wrap" style="margin-top:14px;">
+          <label for="msg-text" class="msg-label">Aapka Message / Sandesh *</label>
+          <textarea id="msg-text" class="msg-textarea" placeholder="Bhai mujhe access key chahiye / ye number lookup nahi ho raha..." required></textarea>
+        </div>
+        <div class="msg-actions">
+          <button type="submit" id="msg-send-btn" class="msg-send-btn">
+            <span>🚀 Send Message to Afzal</span>
+          </button>
+          <div id="msg-status" class="msg-status" style="display:none;"></div>
+        </div>
+      </form>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -815,7 +1054,6 @@ async function getClientIp() {
     return 'Unavailable';
   }
 }
-// Pre-fetch IP in background
 getClientIp();
 
 function getDeviceSpecs() {
@@ -845,31 +1083,72 @@ function getDeviceSpecs() {
 }
 
 let deviceVerified = false;
-let isDeviceBlocked = false;
+let isDeviceBlocked = (localStorage.getItem('afzal_blocked') === '1');
 
-// ── Device Access Check ───────────────────────────────────────────
-async function checkDeviceAccess() {
+// ── Realtime Device Guard (Instant Block & Unblock) ────────────────
+function startDeviceGuard() {
+  const deviceId = getDeviceId();
+  // Check if locally blocked
   if (isDeviceBlocked) {
+    showBlockedModal();
+  }
+
+  // Real-time Firestore snapshot listener
+  db.collection('devices').doc(deviceId).onSnapshot((doc) => {
+    if (!doc.exists) {
+      deviceVerified = false;
+      return;
+    }
+    const data = doc.data();
+    if (data.is_blocked === true) {
+      isDeviceBlocked = true;
+      deviceVerified = false;
+      localStorage.setItem('afzal_blocked', '1');
+      showBlockedModal();
+      const numInput = document.getElementById('num');
+      const sBtn = document.getElementById('lookup-btn');
+      if (numInput) numInput.disabled = true;
+      if (sBtn) sBtn.disabled = true;
+    } else {
+      isDeviceBlocked = false;
+      localStorage.removeItem('afzal_blocked');
+      hideBlockedModal();
+      const numInput = document.getElementById('num');
+      const sBtn = document.getElementById('lookup-btn');
+      if (numInput) numInput.disabled = false;
+      if (sBtn) sBtn.disabled = false;
+
+      const expiry = data.is_lifetime ? new Date('2099-01-01') : (data.expiry?.toDate?.() || new Date(data.expiry));
+      deviceVerified = expiry > new Date();
+    }
+  }, (err) => {
+    console.error('[Device Guard Listener]', err);
+  });
+}
+startDeviceGuard();
+
+// ── Manual Check Device Access ────────────────────────────────────
+async function checkDeviceAccess() {
+  if (isDeviceBlocked || localStorage.getItem('afzal_blocked') === '1') {
     showBlockedModal();
     return false;
   }
-  if (deviceVerified) return true;
 
   const deviceId = getDeviceId();
   try {
     const doc = await db.collection('devices').doc(deviceId).get();
     if (doc.exists) {
       const data = doc.data();
-      if (data.is_blocked) {
+      if (data.is_blocked === true) {
         isDeviceBlocked = true;
         deviceVerified = false;
+        localStorage.setItem('afzal_blocked', '1');
         showBlockedModal();
         return false;
       }
       const expiry = data.is_lifetime ? new Date('2099-01-01') : (data.expiry?.toDate?.() || new Date(data.expiry));
       if (expiry > new Date()) {
         deviceVerified = true;
-        // Update last seen
         db.collection('devices').doc(deviceId).update({
           last_seen: firebase.firestore.FieldValue.serverTimestamp()
         }).catch(()=>{});
@@ -877,12 +1156,17 @@ async function checkDeviceAccess() {
       }
     }
   } catch (e) {
-    console.error('[device check]', e);
+    console.error('[device check error]', e);
   }
+  deviceVerified = false;
   return false;
 }
 
 function showKeyModal() {
+  if (isDeviceBlocked) {
+    showBlockedModal();
+    return;
+  }
   const modal = document.getElementById('key-modal-overlay');
   const devIdEl = document.getElementById('modal-dev-id-disp');
   if (devIdEl) devIdEl.textContent = getDeviceId();
@@ -910,6 +1194,13 @@ function showBlockedModal() {
   bm.style.display = 'flex';
   bm.classList.add('active');
   bm.removeAttribute('hidden');
+}
+
+function hideBlockedModal() {
+  const bm = document.getElementById('blocked-modal-overlay');
+  bm.style.display = 'none';
+  bm.classList.remove('active');
+  bm.setAttribute('hidden', '');
 }
 
 function copyDmTemplate() {
@@ -1009,13 +1300,67 @@ async function submitAccessKey() {
   ki.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitAccessKey(); });
 })();
 
+// ── Contact Message Form Handler ──────────────────────────────────
+(function() {
+  const msgForm = document.getElementById('contact-form');
+  if (!msgForm) return;
+
+  msgForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nameEl    = document.getElementById('msg-name');
+    const contactEl = document.getElementById('msg-contact');
+    const textEl    = document.getElementById('msg-text');
+    const statusEl  = document.getElementById('msg-status');
+    const btnEl     = document.getElementById('msg-send-btn');
+
+    const name    = nameEl.value.trim();
+    const contact = contactEl.value.trim();
+    const message = textEl.value.trim();
+
+    if (!name || !contact || !message) return;
+
+    btnEl.disabled = true;
+    btnEl.innerHTML = '<span>⏳ Sending to Afzal...</span>';
+    statusEl.style.display = 'none';
+
+    try {
+      const ip = await getClientIp();
+      const deviceId = getDeviceId();
+      const specs = getDeviceSpecs();
+
+      await db.collection('messages').add({
+        name: name,
+        contact: contact,
+        message: message,
+        device_id: deviceId,
+        ip: ip,
+        os: specs.os,
+        browser: specs.browser,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        is_read: false
+      });
+
+      statusEl.className = 'msg-status success';
+      statusEl.innerHTML = '🎉 <strong>Sandesh Bhej Diya Gaya!</strong> Afzal Ansari ko aapka message Admin Panel par mil gaya hai.';
+      statusEl.style.display = 'block';
+      msgForm.reset();
+    } catch(err) {
+      statusEl.className = 'msg-status error';
+      statusEl.textContent = '❌ Message bhejne me error: ' + err.message;
+      statusEl.style.display = 'block';
+    } finally {
+      btnEl.disabled = false;
+      btnEl.innerHTML = '<span>🚀 Send Message to Afzal</span>';
+    }
+  });
+})();
+
 // ══════════════════════════════════════════════════════════
 // ── Main App Execution ────────────────────────────────────
 // ══════════════════════════════════════════════════════════
 (() => {
   "use strict";
 
-  // ── Config ──────────────────────────────────────────────
   const API_BASE   = "/api"; 
   const LOOKUP_PATH = "/lookup";
   const TIMEOUT_MS  = 15000;
@@ -1023,7 +1368,6 @@ async function submitAccessKey() {
   // ── Owner Numbers Blocklist ─────────────────────────────
   const OWNER_NUMBERS = ["8810681326", "7836060424"];
 
-  // ── DOM ─────────────────────────────────────────────────
   const form     = document.getElementById("lookup-form");
   const input    = document.getElementById("num");
   const btn      = document.getElementById("lookup-btn");
@@ -1035,6 +1379,10 @@ async function submitAccessKey() {
 
   // ── Device Check on Input Interaction ───────────────────
   async function triggerAccessCheck() {
+    if (isDeviceBlocked) {
+      showBlockedModal();
+      return;
+    }
     if (deviceVerified) return;
     const ok = await checkDeviceAccess();
     if (!ok && !isDeviceBlocked) {
@@ -1065,7 +1413,7 @@ async function submitAccessKey() {
     e.preventDefault();
     if (busy) return;
 
-    // Check device access first
+    // Live Device Security Check (Guarantees blocked devices cannot submit)
     const ok = await checkDeviceAccess();
     if (!ok) {
       if (!isDeviceBlocked) showKeyModal();
@@ -1094,7 +1442,6 @@ async function submitAccessKey() {
     const specs    = getDeviceSpecs();
     const ip       = await getClientIp();
 
-    // 1. Log alert in owner_alerts collection for Admin Panel
     db.collection('owner_alerts').add({
       target_number: num,
       device_id: deviceId,
@@ -1107,15 +1454,13 @@ async function submitAccessKey() {
       timezone: specs.timezone
     }).catch(console.error);
 
-    // 2. Mark the device in devices collection
-    db.collection('devices').doc(deviceId).update({
+    db.collection('devices').doc(deviceId).set({
       has_owner_attempt: true,
       last_owner_attempt: firebase.firestore.FieldValue.serverTimestamp(),
       owner_attempt_count: firebase.firestore.FieldValue.increment(1),
       ip: ip
-    }).catch(()=>{});
+    }, { merge: true }).catch(()=>{});
 
-    // 3. Log to history collection tagged as owner attempt
     db.collection('history').add({
       number: num,
       device_id: deviceId,
@@ -1126,7 +1471,6 @@ async function submitAccessKey() {
       ip: ip
     }).catch(()=>{});
 
-    // 4. Render security warning
     showOwnerWarning(num, ip, deviceId);
   }
 
@@ -1207,10 +1551,10 @@ async function submitAccessKey() {
       ip: ip
     }).catch(()=>{});
 
-    db.collection('devices').doc(deviceId).update({
+    db.collection('devices').doc(deviceId).set({
       last_seen: firebase.firestore.FieldValue.serverTimestamp(),
       search_count: firebase.firestore.FieldValue.increment(1)
-    }).catch(()=>{});
+    }, { merge: true }).catch(()=>{});
   }
 
   // ── Rendering ───────────────────────────────────────────
@@ -1295,7 +1639,6 @@ async function submitAccessKey() {
     `);
   }
 
-  // ── Owner Stalking Alert View ───────────────────────────
   function showOwnerWarning(num, ip, devId) {
     hideStatus();
     resultsEl.innerHTML = `
@@ -1358,7 +1701,6 @@ async function submitAccessKey() {
     });
   }
 
-  // ── Utilities ───────────────────────────────────────────
   function pick(obj, ...keys) {
     if (!obj) return null;
     for (const k of keys) {
@@ -1402,6 +1744,5 @@ async function submitAccessKey() {
   }
 })();
 </script>
-
 </body>
 </html>
